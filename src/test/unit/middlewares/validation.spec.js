@@ -1,16 +1,14 @@
 jest.mock('~/utils/errorsHelper')
 jest.mock('~/consts/errors', () => ({
-  BODY_IS_NOT_DEFINED: 1,
-  FIELD_IS_NOT_DEFINED: () => 2,
-  FIELD_IS_NOT_OF_PROPER_TYPE: () => 3,
-  FIELD_IS_NOT_OF_PROPER_LENGTH: () => 4,
-  FIELD_IS_NOT_OF_PROPER_FORMAT: () => 5,
-  FIELD_IS_NOT_OF_PROPER_ENUM_VALUE: () => 6
+  BODY_IS_NOT_DEFINED: 1
 }))
+jest.mock('~/utils/validationHelper')
 
 const { createError } = require('~/utils/errorsHelper')
 
 const validationMiddleware = require('~/middlewares/validation')
+
+const { validateRequired, validateFunc } = require('~/utils/validationHelper')
 
 const TestEnum = ['testvalue']
 
@@ -43,7 +41,7 @@ describe('Validation middleware', () => {
   })
 
   afterEach(() => {
-    jest.restoreAllMocks()
+    jest.resetAllMocks()
   })
 
   it('Should return error when body is not present', () => {
@@ -57,11 +55,33 @@ describe('Validation middleware', () => {
   })
 
   it('Should return error when required field is not present', () => {
+    validateRequired.mockImplementation(() => {
+      throw 2
+    })
     try {
       validationMiddleware(mockSchema)(req, res, next)
     } catch (err) {
       expect(err).toEqual(2)
     }
+    expect(validateRequired).toHaveBeenCalledWith('test1', mockSchema.test1.required, undefined)
+  })
+
+  it('Should call next when empty field is not required', () => {
+    req.body = {
+      test1: undefined
+    }
+
+    try {
+      validationMiddleware({
+        test1: {
+          required: false
+        }
+      })(req, res, next)
+    } catch (err) {
+      expect(err).not.toBeDefined()
+    }
+
+    expect(next).toHaveBeenCalled()
   })
 
   it('Should return error when field has wrong type', () => {
@@ -69,11 +89,17 @@ describe('Validation middleware', () => {
       test1: 1
     }
 
+    validateFunc.type.mockImplementation(() => {
+      throw 3
+    })
+
     try {
       validationMiddleware(mockSchema)(req, res, next)
     } catch (err) {
       expect(err).toEqual(3)
     }
+
+    expect(validateFunc.type).toHaveBeenCalledWith('test1', mockSchema.test1.type, req.body.test1)
   })
 
   it('Should return error when field has wrong length', () => {
@@ -81,11 +107,17 @@ describe('Validation middleware', () => {
       test1: '123'
     }
 
+    validateFunc.length.mockImplementation(() => {
+      throw 4
+    })
+
     try {
       validationMiddleware(mockSchema)(req, res, next)
     } catch (err) {
       expect(err).toEqual(4)
     }
+
+    expect(validateFunc.length).toHaveBeenCalledWith('test1', mockSchema.test1.length, req.body.test1)
   })
 
   it("Should return error when field doesn't match regex", () => {
@@ -93,11 +125,17 @@ describe('Validation middleware', () => {
       test1: 'abcd123'
     }
 
+    validateFunc.regex.mockImplementation(() => {
+      throw 5
+    })
+
     try {
       validationMiddleware(mockSchema)(req, res, next)
     } catch (err) {
       expect(err).toEqual(5)
     }
+
+    expect(validateFunc.regex).toHaveBeenCalledWith('test1', mockSchema.test1.regex, req.body.test1)
   })
 
   it("Should return error when field isn't enum value", () => {
@@ -105,14 +143,23 @@ describe('Validation middleware', () => {
       test1: 'testtest'
     }
 
+    validateFunc.enum.mockImplementation(() => {
+      throw 6
+    })
+
     try {
       validationMiddleware(mockSchema)(req, res, next)
     } catch (err) {
       expect(err).toEqual(6)
     }
+
+    expect(validateFunc.enum).toHaveBeenCalledWith('test1', mockSchema.test1.enum, req.body.test1)
   })
 
   it('Should not call next function when error appear', () => {
+    validateRequired.mockImplementation(() => {
+      throw 2
+    })
     try {
       validationMiddleware(mockSchema)(req, res, next)
     } catch (err) {
