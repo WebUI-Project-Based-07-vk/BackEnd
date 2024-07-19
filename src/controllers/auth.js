@@ -86,11 +86,21 @@ const updatePassword = async (req, res) => {
   res.status(204).end()
 }
 
+const confirmEmail = async (req, res) => {
+  const {token} =req.query;
+  await authService.confirmEmail(token);
+
+  res. status(200).json({message:'Email confirmed successfully'});
+
+}
+
+
 module.exports = {
   signup,
   login,
   logout,
   refreshAccessToken,
   sendResetPasswordEmail,
-  updatePassword
+  updatePassword,
+  confirmEmail
 }

@@ -13,6 +13,7 @@ const emailSubject = require('~/consts/emailSubject')
 const {
   tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
+const { confirmEmail } = require('~/controllers/auth')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
@@ -25,6 +26,19 @@ const authService = {
       userId: user._id,
       userEmail: user.email
     }
+  },
+
+  confirmEmail : async (token) => {
+    const tokenData = tokenService.validateConfirmToken(token);
+
+    if(!tokenData){
+      throw createError(400, EMAIL_NOT_CONFIRMED);
+    }
+
+    const userId = tokenData.id;
+    await privateUpdateUser(userId, {isEmailConfirmed: true});
+
+    await tokenService.removeConfirmToken(userId);
   },
 
   login: async (email, password, isFromGoogle) => {

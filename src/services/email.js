@@ -1,6 +1,7 @@
 const EmailTemplates = require('email-templates')
 const { sendMail } = require('~/utils/mailer')
 const { templateList } = require('~/emails')
+
 const {
   gmailCredentials: { user }
 } = require('~/configs/config')
@@ -11,6 +12,9 @@ const emailTemplates = new EmailTemplates()
 
 const emailService = {
   sendEmail: async (email, subject, language, text = {}) => {
+    console.log('Sending email to:', email) // test
+    console.log('Email subject:', subject) // test
+    console.log('Email text:', text) // test
     const templateToSend = templateList[subject]
 
     if (!templateToSend) {
@@ -20,8 +24,8 @@ const emailService = {
     const langTemplate = templateToSend[language]
 
     const html = await emailTemplates.render(langTemplate.template, text)
-
-    await sendMail({
+    
+      await sendMail({
       from: `Space2Study <${user}>`,
       to: email,
       subject: langTemplate.subject,
