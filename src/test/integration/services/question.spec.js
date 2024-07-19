@@ -171,11 +171,9 @@ describe('Question service', () => {
       userId: '12345678'
     }
 
-    try {
-      await questionService.updateQuestion(mockData.id, mockData.userId, mockData.toUpdate)
-    } catch (err) {
-      expect(err).toEqual(createForbiddenError())
-    }
+    expect(
+      async () => await questionService.updateQuestion(mockData.id, mockData.userId, mockData.toUpdate)
+    ).rejects.toThrow(createForbiddenError())
   })
 
   it('Should update question', async () => {
@@ -208,11 +206,9 @@ describe('Question service', () => {
       userId: '12345678'
     }
 
-    try {
-      await questionService.deleteQuestion(mockData.id, mockData.userId)
-    } catch (err) {
-      expect(err).toEqual(createForbiddenError())
-    }
+    expect(async () => await questionService.deleteQuestion(mockData.id, mockData.userId)).rejects.toThrow(
+      createForbiddenError()
+    )
   })
 
   it('Should delete question', async () => {
