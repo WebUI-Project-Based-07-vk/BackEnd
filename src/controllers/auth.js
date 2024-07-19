@@ -6,6 +6,8 @@ const {
 const {
   tokenNames: { REFRESH_TOKEN, ACCESS_TOKEN }
 } = require('~/consts/auth')
+const { ID_TOKEN_NOT_RETRIEVED } = require('~/consts/errors')
+const { createError } = require('~/utils/errorsHelper')
 
 const COOKIE_OPTIONS = {
   maxAge: oneDayInMs,
@@ -86,11 +88,27 @@ const updatePassword = async (req, res) => {
   res.status(204).end()
 }
 
+const googleLogin = async (req, res) => {
+  const idToken = req.body.token?.credential
+
+  if (!idToken) throw createError(401, ID_TOKEN_NOT_RETRIEVED)
+
+  const ticket = await authService.getGoogleClientTicket(idToken)
+
+  const tokens = await authService.login(ticket.email, null, true)
+
+  res.cookie(ACCESS_TOKEN, tokens.accessToken, COOKIE_OPTIONS)
+  res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
+
+  res.status(200).json({ accessToken: tokens.accessToken })
+}
+
 module.exports = {
   signup,
   login,
   logout,
   refreshAccessToken,
   sendResetPasswordEmail,
-  updatePassword
+  updatePassword,
+  googleLogin
 }

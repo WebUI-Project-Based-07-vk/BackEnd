@@ -7,12 +7,13 @@ const errors = require('~/consts/errors')
 const tokenService = require('~/services/token')
 const Token = require('~/models/token')
 const { expectError } = require('~/test/helpers')
+const authService = require('~/services/auth')
 
 describe('Auth controller', () => {
   let app, server, signupResponse
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -112,6 +113,47 @@ describe('Auth controller', () => {
       const response = await app.patch('/auth/reset-password/invalid-token').send({ password: 'valid_pass1' })
 
       expectError(400, errors.BAD_RESET_TOKEN, response)
+    })
+  })
+
+  describe('googleLogin endpoint', () => {
+    const originalGetGoogleClientTicket = authService.getGoogleClientTicket
+    const mockTokens = {
+      accessToken: 'mockAccessToken',
+      refreshToken: 'mockRefreshToken'
+    }
+
+    beforeEach(() => {
+      authService.getGoogleClientTicket = jest.fn().mockResolvedValue({ email: user.email })
+    })
+    afterEach(() => jest.resetAllMocks())
+
+    it('should throw ID_TOKEN_NOT_RETRIEVED error if idToken was not provided', async () => {
+      const response = await app.post('/auth/google-auth').send({ token: { credential: null } })
+
+      expectError(401, errors.ID_TOKEN_NOT_RETRIEVED, response)
+    })
+
+    it('should return BAD_ID_TOKEN error', async () => {
+      authService.getGoogleClientTicket = originalGetGoogleClientTicket
+      const response = await app.post('/auth/google-auth').send({ token: { credential: 'mockIdToken' } })
+
+      expectError(400, errors.BAD_ID_TOKEN, response)
+    })
+
+    it('should set tokens cookies and response with accessToken', async () => {
+      authService.login = jest.fn().mockResolvedValue(mockTokens)
+
+      const response = await app.post('/auth/google-auth').send({ token: { credential: 'mockIdToken' } })
+
+      expect(authService.login).toHaveBeenCalledWith(user.email, null, true)
+      expect(response.headers['set-cookie']).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining(`accessToken=${mockTokens.accessToken}`),
+          expect.stringContaining(`refreshToken=${mockTokens.refreshToken}`)
+        ])
+      )
+      expect(response.body).toEqual({ accessToken: mockTokens.accessToken })
     })
   })
 })

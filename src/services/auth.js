@@ -7,12 +7,17 @@ const {
   INCORRECT_CREDENTIALS,
   BAD_RESET_TOKEN,
   BAD_REFRESH_TOKEN,
-  USER_NOT_FOUND
+  USER_NOT_FOUND,
+  BAD_ID_TOKEN
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
 const {
   tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
+const { OAuth2Client } = require('google-auth-library')
+const {
+  gmailCredentials: { clientId }
+} = require('~/configs/config')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
@@ -34,7 +39,7 @@ const authService = {
       throw createError(401, USER_NOT_FOUND)
     }
 
-    const checkedPassword = (password === user.password) || isFromGoogle
+    const checkedPassword = password === user.password || isFromGoogle
 
     if (!checkedPassword) {
       throw createError(401, INCORRECT_CREDENTIALS)
@@ -109,6 +114,20 @@ const authService = {
     await emailService.sendEmail(email, emailSubject.SUCCESSFUL_PASSWORD_RESET, language, {
       firstName
     })
+  },
+
+  getGoogleClientTicket: async (idToken) => {
+    const oAuth2Client = new OAuth2Client(clientId)
+
+    try {
+      const ticket = await oAuth2Client.verifyIdToken({
+        idToken,
+        audience: clientId
+      })
+      return ticket.getPayload()
+    } catch (err) {
+      throw createError(400, BAD_ID_TOKEN)
+    }
   }
 }
 
