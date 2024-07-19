@@ -47,22 +47,16 @@ describe('Validation middleware', () => {
   it('Should return error when body is not present', () => {
     req.body = null
 
-    try {
-      validationMiddleware({})(req, res, next)
-    } catch (err) {
-      expect(err).toEqual(1)
-    }
+    expect(() => validationMiddleware(mockSchema)(req, res, next)).toThrow(new Error(1))
   })
 
   it('Should return error when required field is not present', () => {
     validateRequired.mockImplementation(() => {
       throw 2
     })
-    try {
-      validationMiddleware(mockSchema)(req, res, next)
-    } catch (err) {
-      expect(err).toEqual(2)
-    }
+
+    expect(() => validationMiddleware(mockSchema)(req, res, next)).toThrow(new Error(2))
+
     expect(validateRequired).toHaveBeenCalledWith('test1', mockSchema.test1.required, undefined)
   })
 
@@ -93,11 +87,7 @@ describe('Validation middleware', () => {
       throw 3
     })
 
-    try {
-      validationMiddleware(mockSchema)(req, res, next)
-    } catch (err) {
-      expect(err).toEqual(3)
-    }
+    expect(() => validationMiddleware(mockSchema)(req, res, next)).toThrow(new Error(3))
 
     expect(validateFunc.type).toHaveBeenCalledWith('test1', mockSchema.test1.type, req.body.test1)
   })
@@ -111,11 +101,7 @@ describe('Validation middleware', () => {
       throw 4
     })
 
-    try {
-      validationMiddleware(mockSchema)(req, res, next)
-    } catch (err) {
-      expect(err).toEqual(4)
-    }
+    expect(() => validationMiddleware(mockSchema)(req, res, next)).toThrow(new Error(4))
 
     expect(validateFunc.length).toHaveBeenCalledWith('test1', mockSchema.test1.length, req.body.test1)
   })
@@ -129,11 +115,7 @@ describe('Validation middleware', () => {
       throw 5
     })
 
-    try {
-      validationMiddleware(mockSchema)(req, res, next)
-    } catch (err) {
-      expect(err).toEqual(5)
-    }
+    expect(() => validationMiddleware(mockSchema)(req, res, next)).toThrow(new Error(5))
 
     expect(validateFunc.regex).toHaveBeenCalledWith('test1', mockSchema.test1.regex, req.body.test1)
   })
@@ -147,11 +129,7 @@ describe('Validation middleware', () => {
       throw 6
     })
 
-    try {
-      validationMiddleware(mockSchema)(req, res, next)
-    } catch (err) {
-      expect(err).toEqual(6)
-    }
+    expect(() => validationMiddleware(mockSchema)(req, res, next)).toThrow(new Error(6))
 
     expect(validateFunc.enum).toHaveBeenCalledWith('test1', mockSchema.test1.enum, req.body.test1)
   })
@@ -160,11 +138,9 @@ describe('Validation middleware', () => {
     validateRequired.mockImplementation(() => {
       throw 2
     })
-    try {
-      validationMiddleware(mockSchema)(req, res, next)
-    } catch (err) {
-      expect(err).toBeDefined()
-    }
+
+    expect(() => validationMiddleware(mockSchema)(req, res, next)).toThrow(new Error(2))
+
     expect(next).not.toHaveBeenCalled()
   })
 
