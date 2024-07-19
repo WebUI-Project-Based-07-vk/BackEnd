@@ -163,8 +163,9 @@ describe('Validation middleware', () => {
     try {
       validationMiddleware(mockSchema)(req, res, next)
     } catch (err) {
-      expect(next).not.toHaveBeenCalled()
+      expect(err).toBeDefined()
     }
+    expect(next).not.toHaveBeenCalled()
   })
 
   it('Should call next function when everything is good', () => {
