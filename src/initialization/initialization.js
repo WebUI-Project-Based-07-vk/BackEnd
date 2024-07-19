@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const swaggerui = require('swagger-ui-express')
-const swaggerDocs = require('../docs/swagger')
+const swaggerDocs = require('~/docs/swagger')
 
 const {
   config: { CLIENT_URL }
