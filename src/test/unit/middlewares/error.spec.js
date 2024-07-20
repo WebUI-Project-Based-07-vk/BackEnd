@@ -27,7 +27,7 @@ describe('Error middleware', () => {
   const next = jest.fn()
 
   beforeAll(() => {
-    logger.error.mockImplementation(() => jest.fn())
+    logger.error = jest.fn()
   })
 
   it('Should call logger', () => {
