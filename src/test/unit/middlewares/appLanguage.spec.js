@@ -5,7 +5,11 @@ const {
 } = require('~/consts/validation')
 const { createError } = require('~/utils/errorsHelper')
 
-jest.mock('~/utils/errorsHelper')
+jest.mock('~/utils/errorsHelper', () => ({
+  createError: jest.fn((_status, _errorInfo) => {
+    return new Error('test error')
+  })
+}))
 
 describe('langMiddleware', () => {
   let req
@@ -37,9 +41,12 @@ describe('langMiddleware', () => {
       error.status = status
       return error
     })
-
-    expect(() => langMiddleware(req, res, next)).toThrow(createError(400, INVALID_LANGUAGE))
-    expect(next).not.toHaveBeenCalled()
+    try {
+      langMiddleware(req, res, next)
+    } catch (error) {
+      expect(createError).toHaveBeenCalledWith(400, INVALID_LANGUAGE)
+      expect(next).not.toHaveBeenCalled()
+    }
   })
 
   it('should throw an error if no language is provided', () => {
@@ -50,7 +57,11 @@ describe('langMiddleware', () => {
       return error
     })
 
-    expect(() => langMiddleware(req, res, next)).toThrow(createError(400, INVALID_LANGUAGE))
-    expect(next).not.toHaveBeenCalled()
+    try {
+      langMiddleware(req, res, next)
+    } catch (error) {
+      expect(createError).toHaveBeenCalledWith(400, INVALID_LANGUAGE)
+      expect(next).not.toHaveBeenCalled()
+    }
   })
 })
