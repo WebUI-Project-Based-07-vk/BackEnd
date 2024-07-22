@@ -6,6 +6,7 @@ const resourcesCategorySchema = require('~/models/resourcesCategory')
 const { enums } = require('~/consts/validation.js')
 const ObjectId = require('mongoose').Types.ObjectId
 const { createForbiddenError } = require('~/utils/errorsHelper')
+const Question = require('~/models/question')
 
 describe('Question service', () => {
   let mongodb
@@ -35,6 +36,11 @@ describe('Question service', () => {
     })
     await category.save()
   })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
   afterAll(async () => {
     await mongoose.connection.dropDatabase()
     await mongoose.connection.close()
@@ -171,9 +177,22 @@ describe('Question service', () => {
       userId: '12345678'
     }
 
+    const questionMock = {
+      _id: question._id,
+      author: 'different-user-id',
+      save: jest.fn(),
+      populate: jest.fn().mockResolvedValue({})
+    }
+
+    jest.spyOn(Question, 'findById').mockReturnValue({
+      exec: jest.fn().mockResolvedValue(questionMock)
+    })
+
     expect(
       async () => await questionService.updateQuestion(mockData.id, mockData.userId, mockData.toUpdate)
     ).rejects.toThrow(createForbiddenError())
+
+    expect(questionMock.save).not.toHaveBeenCalled()
   })
 
   it('Should update question', async () => {
@@ -206,9 +225,13 @@ describe('Question service', () => {
       userId: '12345678'
     }
 
+    const spy = jest.spyOn(Question, 'findByIdAndRemove')
+
     expect(async () => await questionService.deleteQuestion(mockData.id, mockData.userId)).rejects.toThrow(
       createForbiddenError()
     )
+
+    expect(spy).not.toHaveBeenCalled()
   })
 
   it('Should delete question', async () => {
