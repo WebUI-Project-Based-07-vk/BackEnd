@@ -87,13 +87,14 @@ const updatePassword = async (req, res) => {
 }
 
 const confirmEmail = async (req, res) => {
-  const {token} =req.query;
-  await authService.confirmEmail(token);
-
-  res. status(200).json({message:'Email confirmed successfully'});
-
+  try {
+    const { token } = req.query
+    await authService.confirmEmail(token)
+    res.status(200).json({ message: 'Email confirmed successfully' })
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
 }
-
 
 module.exports = {
   signup,
