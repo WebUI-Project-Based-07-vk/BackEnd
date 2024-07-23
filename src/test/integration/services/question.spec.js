@@ -204,6 +204,17 @@ describe('Question service', () => {
       userId: question.author.toString()
     }
 
+    const questionMock = {
+      _id: question._id,
+      author: 'different-user-id',
+      save: jest.fn(),
+      populate: jest.fn().mockResolvedValue({})
+    }
+
+    jest.spyOn(Question, 'findById').mockReturnValue({
+      exec: jest.fn().mockResolvedValue(questionMock)
+    })
+
     const response = await questionService.updateQuestion(mockData.id, mockData.userId, mockData.toUpdate)
 
     const matchObject = {
@@ -217,6 +228,7 @@ describe('Question service', () => {
 
     expect(response).toMatchObject(matchObject)
     expect(response.updatedAt).not.toEqual(question.updatedAt)
+    expect(questionMock.save).toHaveBeenCalled()
   })
 
   it("Should not delete question when currentUser doesn't match author", async () => {
