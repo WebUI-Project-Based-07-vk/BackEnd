@@ -27,7 +27,6 @@ describe('langMiddleware', () => {
 
   it('should set the language if a valid language is provided', () => {
     req.acceptsLanguages.mockReturnValue(APP_LANG_ENUM[0])
-
     langMiddleware(req, res, next)
 
     expect(req.lang).toBe(APP_LANG_ENUM[0])
@@ -36,32 +35,26 @@ describe('langMiddleware', () => {
 
   it('should throw an error if an invalid language is provided', () => {
     req.acceptsLanguages.mockReturnValue(false)
-    createError.mockImplementation((status, message) => {
-      const error = new Error(message)
-      error.status = status
-      return error
-    })
+
     try {
       langMiddleware(req, res, next)
     } catch (error) {
-      expect(createError).toHaveBeenCalledWith(400, INVALID_LANGUAGE)
-      expect(next).not.toHaveBeenCalled()
+      expect(error.message).toEqual('test error')
     }
+    expect(createError).toHaveBeenCalledWith(400, INVALID_LANGUAGE)
+    expect(next).not.toHaveBeenCalled()
   })
 
   it('should throw an error if no language is provided', () => {
     req.acceptsLanguages.mockReturnValue(null)
-    createError.mockImplementation((status, message) => {
-      const error = new Error(message)
-      error.status = status
-      return error
-    })
 
     try {
       langMiddleware(req, res, next)
     } catch (error) {
-      expect(createError).toHaveBeenCalledWith(400, INVALID_LANGUAGE)
-      expect(next).not.toHaveBeenCalled()
+      expect(error.message).toEqual('test error')
     }
+
+    expect(createError).toHaveBeenCalledWith(400, INVALID_LANGUAGE)
+    expect(next).not.toHaveBeenCalled()
   })
 })
