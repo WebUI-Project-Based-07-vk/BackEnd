@@ -1,0 +1,57 @@
+paths:
+  /offers:
+    get:
+      summary: "Get Offers"
+      description: "Retrieve a list of offers based on query parameters"
+      responses:
+        '200':
+          description: "OK: Successfully retrieved list of offers"
+        '400':
+          description: "Bad request: Invalid query parameters"
+    post:
+      summary: "Create Offer"
+      description: "Create a new offer"
+      responses:
+        '201':
+          description: "Created: New offer created successfully"
+  /offers/{id}:
+    get:
+      summary: "Get Offer by ID"
+      description: "Retrieve a specific offer using its ID"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: "ID of the offer"
+          type: string
+      responses:
+        '200':
+          description: "OK: Successfully retrieved the offer"
+    patch:
+      summary: "Update Offer"
+      description: "Update an existing offer using its ID"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: "ID of the offer to be updated"
+          type: string
+      responses:
+        '204':
+          description: "No Content: Offer updated successfully"
+        '400':
+          description: "Bad request: Invalid input data"
+    delete:
+      summary: "Delete Offer"
+      description: "Delete an existing offer using its ID"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: "ID of the offer to be deleted"
+          type: string
+      responses:
+        '204':
+          description: "No Content: Offer deleted successfully"
+        '404':
+          description: "Not Found: Offer not found"
