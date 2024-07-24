@@ -34,7 +34,7 @@ describe('idValidation Middleware', () => {
     } catch (error) {
       expect(error.message).toEqual("test error")
     }
-	expect(createError).toHaveBeenCalledWith(400, INVALID_ID);
+    expect(createError).toHaveBeenCalledWith(400, INVALID_ID);
     expect(next).not.toHaveBeenCalled()
   })
 })
