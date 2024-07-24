@@ -1,34 +1,34 @@
-const authService = require('~/services/auth')
-const { createError } = require('~/utils/errorsHelper')
+const authService = require('../../../services/auth')
 
 jest.mock('~/services/auth')
 
 describe('Auth Service', () => {
-  describe('Email Confirmation', () => {
-    it('should confirm email successfully with valid token', async () => {
-      const token = 'valid-confirmation-token'
+  describe('Google Auth', () => {
+    it('should return token on successful Google Auth', async () => {
+      const email = 'test@gmail.com'
+      const tokens = { accessToken: 'access-token', refreshToken: 'refresh-token' }
 
-      authService.confirmEmail = jest.fn().mockResolvedValue({ message: 'Email confirmed successfully' })
+      authService.googleAuth = jest.fn().mockResolvedValue(tokens)
 
-      const result = await authService.confirmEmail(token)
+      const result = await authService.googleAuth(email)
 
-      expect(result).toEqual({ message: 'Email confirmed successfully' })
+      expect(result).toEqual(tokens)
     })
 
-    it('should throw INVALID_TOKEN error if token is invalid', async () => {
-      const token = 'invalid-token'
+    it('should throw USER_NOT_FOUND error if user is not found', async () => {
+      const email = 'nonexistent@gmail.com'
 
-      authService.confirmEmail = jest.fn().mockRejectedValue(createError(400, 'INVALID_TOKEN'))
+      authService.googleAuth = jest.fn().mockRejectedValue(new Error('USER_NOT_FOUND'))
 
-      await expect(authService.confirmEmail(token)).rejects.toThrow('INVALID_TOKEN')
+      await expect(authService.googleAuth(email)).rejects.toThrow('USER_NOT_FOUND')
     })
 
-    it('should throw TOKEN_EXPIRED error if token has expired', async () => {
-      const token = 'expired-token'
+    it('should throw EMAIL_NOT_CONFIRMED error if email is not confirmed', async () => {
+      const email = 'unconfirmed@gmail.com'
 
-      authService.confirmEmail = jest.fn().mockRejectedValue(createError(400, 'TOKEN_EXPIRED'))
+      authService.googleAuth = jest.fn().mockRejectedValue(new Error('EMAIL_NOT_CONFIRMED'))
 
-      await expect(authService.confirmEmail(token)).rejects.toThrow('TOKEN_EXPIRED')
+      await expect(authService.googleAuth(email)).rejects.toThrow('EMAIL_NOT_CONFIRMED')
     })
   })
 })
