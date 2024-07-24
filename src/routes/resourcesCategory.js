@@ -23,3 +23,4 @@ router.patch('/:id', isEntityValid({ params }), asyncWrapper(resourcesCategoryCo
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(resourcesCategoryController.deleteResourceCategory))
 
 module.exports = router
+
