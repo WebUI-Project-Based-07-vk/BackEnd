@@ -5,7 +5,7 @@ const { createError } = require('~/utils/errorsHelper')
 
 jest.mock('~/utils/errorsHelper', () => ({
   createError: jest.fn((status, errorInfo) => {
-    return new Error();
+    return new Error("test error");
   })
 }));
 
@@ -32,8 +32,9 @@ describe('idValidation Middleware', () => {
     try {
       idValidation(req, res, next, invalidId);
     } catch (error) {
-      expect(createError).toHaveBeenCalledWith(400, INVALID_ID);
+      expect(error.message).toEqual("test error")
     }
+	expect(createError).toHaveBeenCalledWith(400, INVALID_ID);
     expect(next).not.toHaveBeenCalled()
   })
 })
