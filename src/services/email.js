@@ -20,6 +20,8 @@ const emailService = {
     const langTemplate = templateToSend[language]
 
     const html = await emailTemplates.render(langTemplate.template, text)
+    // console.log(langTemplate.template, text)
+    // console.log(html)
 
     await sendMail({
       from: `Space2Study <${user}>`,
