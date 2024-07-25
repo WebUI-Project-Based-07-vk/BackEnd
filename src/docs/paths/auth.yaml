@@ -129,3 +129,50 @@ paths:
         '400':
           description: "Bad request: Invalid password format"
 
+  /auth/google-auth:
+    post:
+      summary: "Google login"
+      description: "Verify user using google Id Token. Google button will automatically generate request body, if set up correctly"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: object
+                  description: "The email of the user requesting password reset"
+                  properties:
+                    clientId:
+                      type: string
+                      description: "Id Token"
+                    client_id:
+                      type: string
+                      description: "Id Token"
+                    credential:
+                      type: string
+                      description: "Id Token"
+                    select_by:
+                      type: string
+                      description: "Id Token"
+                  example:
+                    clientId: string
+                    client_id: string
+                    credential: string
+                    select_by: "btn"
+      responses:
+        '200':
+          description: "Success Token returned"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  successToken:
+                    type: string
+                    description: "Generated JWT success token"
+        '401':
+          description: "The id token has not been retrieved"
+        '400':
+          description: "The id token is either invalid or has expired"
