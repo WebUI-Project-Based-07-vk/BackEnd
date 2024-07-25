@@ -1,3 +1,6 @@
+const { createError } = require('~/utils/errorsHelper')
+const { COUNTRYSTATECITY_API_ISSUE } = require('~/consts/errors')
+
 const locationServiceCities = {
   getCities: async (api_key, iso2_code) => {
     var headers = new Headers()
@@ -14,7 +17,7 @@ const locationServiceCities = {
       const result = await response.text()
       return JSON.parse(result)
     } catch (error) {
-      //
+      throw createError(401, COUNTRYSTATECITY_API_ISSUE)
     }
   }
 }
