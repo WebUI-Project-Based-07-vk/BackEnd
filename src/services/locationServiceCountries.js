@@ -1,6 +1,5 @@
 const locationServiceCountries = {
   getCountries: async (api_key) => {
-    //console.log(api_key);
     var headers = new Headers()
     headers.append('X-CSCAPI-KEY', api_key)
 
@@ -15,8 +14,7 @@ const locationServiceCountries = {
       const result = await response.text()
       return JSON.parse(result)
     } catch (error) {
-      //console.log('error', error);
-      //throw error;
+      //
     }
   }
 }
