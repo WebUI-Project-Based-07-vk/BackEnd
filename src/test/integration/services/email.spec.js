@@ -38,11 +38,11 @@ describe('email service', () => {
     beforeEach(() => {
       jest.resetAllMocks()
       templateList[mockParams.subject] = mockTemplateList[mockParams.subject]
-      EmailTemplates.mockImplementation(() => {
-        return {
-          render: jest.fn().mockResolvedValue(mockHtml)
-        }
-      })
+      // EmailTemplates.mockImplementation(() => {
+      //   return {
+      //     render: jest.fn().mockResolvedValue(mockHtml)
+      //   }
+      // })
     })
 
     afterEach(() => {
@@ -61,12 +61,14 @@ describe('email service', () => {
 
       const mockTemplate = mockTemplateList[mockParams.subject][mockParams.lang]
 
+      const emailTemplatesMock = jest.spyOn(EmailTemplates.prototype, 'render').mockImplementation(jest.fn().mockResolvedValue(mockHtml))
+
       // const emailTemplates = new EmailTemplates()
       // const result = await emailTemplates.render('en/test-subject', mockParams.text)
-      // // console.log(result)
+      // console.log(result)
       // expect(result).toBe(mockHtml)
 
-      expect(EmailTemplates.prototype.render).toHaveBeenCalledWith(mockTemplate.template, mockParams.text)
+      expect(emailTemplatesMock).toHaveBeenCalledWith(mockTemplate.template, mockParams.text)
       expect(sendMail).toHaveBeenCalledWith({
         from: `Space2Study <${user}>`,
         to: mockParams.email,
