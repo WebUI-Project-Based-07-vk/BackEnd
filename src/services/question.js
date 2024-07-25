@@ -16,6 +16,10 @@ const questionService = {
     return { items, count }
   },
 
+  getQuestionTitles: async (match) => {
+    return await Question.find(match).select('title').exec()
+  },
+
   getQuestionById: async (id) => {
     return await Question.findById(id).lean().exec()
   },
