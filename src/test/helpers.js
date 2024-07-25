@@ -14,10 +14,8 @@ const expectTokensCookies = (tokens, response) => {
   let refreshToken = ''
 
   if (tokens) {
-    accessToken = tokens.accessToken
-    refreshToken = tokens.refreshToken
+    ;({ accessToken, refreshToken } = tokens)
   }
-  console.log(tokens)
 
   expect(response.headers['set-cookie']).toEqual(
     expect.arrayContaining([

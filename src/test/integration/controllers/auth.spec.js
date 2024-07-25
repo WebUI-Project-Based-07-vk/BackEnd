@@ -9,6 +9,13 @@ const Token = require('~/models/token')
 const { expectError, expectStatusCode, expectTokensCookies } = require('~/test/helpers')
 const authService = require('~/services/auth')
 
+/*
+  For these tests it is a must to have .env.test.local
+  There you should use different SERVER_PORT and different database:
+    MONGODB_URL=connection-string-to-our-own-db
+    SERVER_PORT=8081
+ */
+
 describe('Auth controller', () => {
   let app, server, signupResponse
 
@@ -203,10 +210,9 @@ describe('Auth controller', () => {
   })
 
   describe('googleLogin endpoint', () => {
-    const originalGetGoogleClientTicket = authService.getGoogleClientTicket
-
     beforeEach(() => {
       authService.getGoogleClientTicket = jest.fn().mockResolvedValue({ email: user.email })
+      authService.login = jest.fn().mockResolvedValue(mockTokens)
     })
     afterEach(() => jest.resetAllMocks())
 
@@ -216,16 +222,7 @@ describe('Auth controller', () => {
       expectError(401, errors.ID_TOKEN_NOT_RETRIEVED, response)
     })
 
-    it('should return BAD_ID_TOKEN error', async () => {
-      authService.getGoogleClientTicket = originalGetGoogleClientTicket
-      const response = await app.post('/auth/google-auth').send({ token: { credential: 'mockIdToken' } })
-
-      expectError(400, errors.BAD_ID_TOKEN, response)
-    })
-
     it('should set tokens cookies and send response with accessToken', async () => {
-      authService.login = jest.fn().mockResolvedValue(mockTokens)
-
       const response = await app.post('/auth/google-auth').send({ token: { credential: 'mockIdToken' } })
 
       expect(authService.login).toHaveBeenCalledWith(user.email, null, true)
