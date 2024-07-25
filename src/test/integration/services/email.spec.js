@@ -13,7 +13,6 @@ jest.mock('~/utils/mailer')
 
 
 describe('email service', () => {
-
   describe('sendEmail method', () => {
     const mockParams = {
       email: 'test@gmail.com',
@@ -43,6 +42,7 @@ describe('email service', () => {
       //     render: jest.fn().mockResolvedValue(mockHtml)
       //   }
       // })
+      sendMail.mockResolvedValue(true)
     })
 
     afterEach(() => {
@@ -50,8 +50,14 @@ describe('email service', () => {
       delete templateList[mockParams.subject]
     })
 
-    it('Should return TEMPLATE_NOT_FOUND error if templateList not found', async () => {
+    it('Should return TEMPLATE_NOT_FOUND error if template not found', async () => {
       const response = emailService.sendEmail(mockParams.email, null, mockParams.lang, mockParams.text)
+
+      await expect(response).rejects.toThrowError(createError(404, TEMPLATE_NOT_FOUND))
+    })
+
+    it('Should return TEMPLATE_NOT_FOUND error if template language not found', async () => {
+      const response = emailService.sendEmail(mockParams.email, mockParams.subject, null, mockParams.text)
 
       await expect(response).rejects.toThrowError(createError(404, TEMPLATE_NOT_FOUND))
     })
@@ -76,6 +82,5 @@ describe('email service', () => {
         html: mockHtml
       })
     })
-
   })
 })
