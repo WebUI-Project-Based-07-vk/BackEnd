@@ -6,7 +6,7 @@ async function getHash(plainText) {
   try {
     return bcrypt.hash(plainText, config.HASH_SALT_ROUNDS)
   } catch (e) {
-    throw PASSWORD_HASH_ERROR
+    throw PASSWORD_HASH_ERROR(e.message)
   }
 }
 
