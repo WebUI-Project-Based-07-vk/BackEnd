@@ -87,6 +87,10 @@ const errors = {
     code: 'API_TOKEN_NOT_RETRIEVED',
     message: 'The access token has not been retrieved.'
   },
+  REFRESH_TOKEN_NOT_RETRIEVED: {
+    code: 'REFRESH_TOKEN_NOT_RETRIEVED',
+    message: 'The refresh token has not been retrieved.'
+  },
   ID_TOKEN_NOT_RETRIEVED: {
     code: 'ID_TOKEN_NOT_RETRIEVED',
     message: 'The id token has not been retrieved.'

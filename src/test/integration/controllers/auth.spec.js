@@ -6,7 +6,7 @@ const {
 const errors = require('~/consts/errors')
 const tokenService = require('~/services/token')
 const Token = require('~/models/token')
-const { expectError } = require('~/test/helpers')
+const { expectError, expectStatusCode, expectTokensCookies } = require('~/test/helpers')
 const authService = require('~/services/auth')
 
 describe('Auth controller', () => {
@@ -34,6 +34,10 @@ describe('Auth controller', () => {
     lastName: 'test',
     email: 'test@gmail.com',
     password: 'testpass_135'
+  }
+  const mockTokens = {
+    accessToken: 'mockAccessToken',
+    refreshToken: 'mockRefreshToken'
   }
 
   describe('Signup endpoint', () => {
@@ -88,6 +92,74 @@ describe('Auth controller', () => {
 
       expectError(409, errors.ALREADY_REGISTERED, response)
     })
+
+    it('should send response with userData and status 201', async () => {
+      const expectedBody = {
+        userId: 'id',
+        userEmail: user.email
+      }
+      authService.signup = jest.fn().mockResolvedValue(expectedBody)
+
+      const response = await app.post('/auth/signup').send(user)
+
+      expect(response.body).toEqual(expectedBody)
+      expectStatusCode(201, response)
+    })
+  })
+
+  describe('Login endpoint', () => {
+    it('should set tokens cookies and send response with accessToken', async () => {
+      authService.login = jest.fn().mockResolvedValue(mockTokens)
+
+      const response = await app.post('/auth/login').send({
+        email: user.email,
+        password: user.password,
+      })
+
+      expect(authService.login).toHaveBeenCalledWith(user.email, user.password)
+      expect(response.body).toEqual({ accessToken: mockTokens.accessToken })
+      expectTokensCookies(mockTokens, response)
+      expectStatusCode(200, response)
+    })
+  })
+
+  describe('Logout endpoint', () => {
+    it('should send response with status 204 and clear access and refresh tokens cookies', async () => {
+      authService.logout = jest.fn()
+
+      const response = await app.post('/auth/logout').set('Cookie', `refreshToken=${mockTokens.refreshToken}`)
+
+      expect(authService.logout).toHaveBeenCalledWith(mockTokens.refreshToken)
+      expectTokensCookies(null, response)
+      expectStatusCode(204, response)
+    })
+  })
+
+  describe('refreshAccessToken endpoint', () => {
+    beforeEach(() => {
+      authService.refreshAccessToken = jest.fn().mockResolvedValue(mockTokens)
+    })
+    afterEach(() => jest.resetAllMocks())
+
+    it('should throw REFRESH_TOKEN_NOT_RETRIEVED error', async () => {
+      const response = await app.get('/auth/refresh')
+
+      expect(response.headers['set-cookie']).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining('accessToken='),
+        ])
+      )
+      expectError(401, errors.REFRESH_TOKEN_NOT_RETRIEVED, response)
+    })
+
+    it('should set tokens cookies and send response with accessToken', async () => {
+      const response = await app.get('/auth/refresh').set('Cookie', `refreshToken=${mockTokens.refreshToken}`)
+
+      expect(authService.refreshAccessToken).toHaveBeenCalledWith(mockTokens.refreshToken)
+      expect(response.body).toEqual({ accessToken: mockTokens.accessToken })
+      expectTokensCookies(mockTokens, response)
+      expectStatusCode(200, response)
+    })
   })
 
   describe('SendResetPasswordEmail endpoint', () => {
@@ -95,6 +167,13 @@ describe('Auth controller', () => {
       const response = await app.post('/auth/forgot-password').send({ email: 'invalid@gmail.com' })
 
       expectError(404, errors.USER_NOT_FOUND, response)
+    })
+
+    it('should send response with status 204', async () => {
+      authService.sendResetPasswordEmail = jest.fn()
+      const response = await app.post('/auth/forgot-password').send({ email: user.email })
+
+      expectStatusCode(204, response)
     })
   })
 
@@ -114,14 +193,17 @@ describe('Auth controller', () => {
 
       expectError(400, errors.BAD_RESET_TOKEN, response)
     })
+
+    it('should send response with status 204', async () => {
+      authService.updatePassword = jest.fn()
+      const response = await app.patch('/auth/reset-password/token').send({ password: user.password })
+
+      expectStatusCode(204, response)
+    })
   })
 
   describe('googleLogin endpoint', () => {
     const originalGetGoogleClientTicket = authService.getGoogleClientTicket
-    const mockTokens = {
-      accessToken: 'mockAccessToken',
-      refreshToken: 'mockRefreshToken'
-    }
 
     beforeEach(() => {
       authService.getGoogleClientTicket = jest.fn().mockResolvedValue({ email: user.email })
@@ -141,19 +223,15 @@ describe('Auth controller', () => {
       expectError(400, errors.BAD_ID_TOKEN, response)
     })
 
-    it('should set tokens cookies and response with accessToken', async () => {
+    it('should set tokens cookies and send response with accessToken', async () => {
       authService.login = jest.fn().mockResolvedValue(mockTokens)
 
       const response = await app.post('/auth/google-auth').send({ token: { credential: 'mockIdToken' } })
 
       expect(authService.login).toHaveBeenCalledWith(user.email, null, true)
-      expect(response.headers['set-cookie']).toEqual(
-        expect.arrayContaining([
-          expect.stringContaining(`accessToken=${mockTokens.accessToken}`),
-          expect.stringContaining(`refreshToken=${mockTokens.refreshToken}`)
-        ])
-      )
       expect(response.body).toEqual({ accessToken: mockTokens.accessToken })
+      expectTokensCookies(mockTokens, response)
+      expectStatusCode(200, response)
     })
   })
 })
