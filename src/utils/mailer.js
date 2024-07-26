@@ -5,7 +5,7 @@ const {
   gmailCredentials: { user, clientId, clientSecret, refreshToken, redirectUri }
 } = require('~/configs/config')
 const { createError } = require('~/utils/errorsHelper')
-const { API_TOKEN_NOT_RETRIEVED } = require('~/consts/errors')
+const { API_TOKEN_NOT_RETRIEVED, EMAIL_NOT_SENT } = require('~/consts/errors')
 
 const OAuth2 = google.auth.OAuth2
 
@@ -46,11 +46,17 @@ const createTransport = async () => {
 }
 
 const sendMail = async (mailOptions) => {
-  const transporter = await createTransport()
-  await transporter.verify()
-  const result = await transporter.sendMail(mailOptions)
-  transporter.close()
-  return result
+  try {
+    const transporter = await createTransport()
+    await transporter.verify()
+    const result = await transporter.sendMail(mailOptions)
+    transporter.close()
+
+    return result
+  } catch (err) {
+    logger.error(err)
+    throw createError(400, EMAIL_NOT_SENT)
+  }
 }
 
 module.exports = { getAccessToken, createTransport, sendMail }

@@ -31,18 +31,14 @@ const emailService = {
       throw createError(404, TEMPLATE_NOT_FOUND)
     }
 
-    try {
-      const html = await emailTemplates.render(langTemplate.template, text)
+    const html = await emailTemplates.render(langTemplate.template, text)
 
-      await sendMail({
-        from: `Space2Study <${user}>`,
-        to: email,
-        subject: langTemplate.subject,
-        html
-      })
-    } catch (error) {
-      throw createError(500, 'Failed to send email')
-    }
+    await sendMail({
+      from: `Space2Study <${user}>`,
+      to: email,
+      subject: langTemplate.subject,
+      html
+    })
   }
 }
 
