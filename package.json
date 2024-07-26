@@ -9,7 +9,7 @@
     "lint": "eslint . --fix",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-	"jwt": "node src/utils/updateEnvWithNewJWTKeys.js .env.local"
+    "jwt": "node src/utils/updateEnvWithNewJWTKeys.js .env.local"
   },
   "author": "SoftServe ITA",
   "license": "ISC",
