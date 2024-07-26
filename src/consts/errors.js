@@ -87,6 +87,18 @@ const errors = {
     code: 'API_TOKEN_NOT_RETRIEVED',
     message: 'The access token has not been retrieved.'
   },
+  REFRESH_TOKEN_NOT_RETRIEVED: {
+    code: 'REFRESH_TOKEN_NOT_RETRIEVED',
+    message: 'The refresh token has not been retrieved.'
+  },
+  ID_TOKEN_NOT_RETRIEVED: {
+    code: 'ID_TOKEN_NOT_RETRIEVED',
+    message: 'The id token has not been retrieved.'
+  },
+  BAD_ID_TOKEN: {
+    code: 'BAD_ID_TOKEN',
+    message: 'The id token is either invalid or has expired.'
+  },
   EMAIL_NOT_SENT: {
     code: 'EMAIL_NOT_SENT',
     message: 'Email has not been sent.'
