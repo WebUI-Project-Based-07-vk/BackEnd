@@ -1,0 +1,178 @@
+paths:
+  /auth/signup:
+    post:
+      summary: User Signup
+      description: Endpoint for user signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  description: The role of the user
+                firstName:
+                  type: string
+                  description: The first name of the user
+                lastName:
+                  type: string
+                  description: The last name of the user
+                email:
+                  type: string
+                  format: email
+                  description: The email of the user
+                password:
+                  type: string
+                  description: The password of the user
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Bad request
+  /auth/login:
+    post:
+      summary: "User Login"
+      description: "Authenticate a user using email and password"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: "The email of the user"
+                password:
+                  type: string
+                  description: "The password of the user"
+      responses:
+        '200':
+          description: "Successful login"
+        '400':
+          description: "Invalid credentials"
+  /auth/logout:
+    post:
+      summary: "User Logout"
+      description: "Log out a user by invalidating the refresh token"
+      responses:
+        '204':
+          description: "No Content: User logged out successfully"
+        '400':
+          description: "Bad request: Missing refresh token"
+  /auth/refresh:
+    get:
+      summary: "Refresh Access Token"
+      description: "Obtain a new access token using the refresh token"
+      responses:
+        '200':
+          description: "Successful token refresh"
+          schema:
+            type: object
+            properties:
+              accessToken:
+                type: string
+                description: "New JWT access token"
+              refreshToken:
+                type: string
+                description: "New JWT refresh token"
+        '401':
+          description: "Unauthorized: Missing or invalid refresh token"
+        '500':
+          description: "Server error"
+  /auth/forgot-password:
+    post:
+      summary: "Send Password Reset Email"
+      description: "Send an email to the user for resetting their password"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: "The email of the user requesting password reset"
+      responses:
+        '204':
+          description: "No Content: Reset email sent successfully"
+        '400':
+          description: "Bad request: Invalid email format"
+  /auth/reset-password/{token}:
+    patch:
+      summary: "Update Password"
+      description: "Update the user's password using a reset token"
+      parameters:
+        - in: path
+          name: token
+          required: true
+          description: "Password reset token"
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: "The new password for the user"
+      responses:
+        '204':
+          description: "No Content: Password updated successfully"
+        '400':
+          description: "Bad request: Invalid password format"
+
+  /auth/google-auth:
+    post:
+      summary: "Google login"
+      description: "Verify user using google Id Token. Google button will automatically generate request body, if set up correctly"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: object
+                  description: "The email of the user requesting password reset"
+                  properties:
+                    clientId:
+                      type: string
+                      description: "Id Token"
+                    client_id:
+                      type: string
+                      description: "Id Token"
+                    credential:
+                      type: string
+                      description: "Id Token"
+                    select_by:
+                      type: string
+                      description: "Id Token"
+                  example:
+                    clientId: string
+                    client_id: string
+                    credential: string
+                    select_by: "btn"
+      responses:
+        '200':
+          description: "Success Token returned"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  successToken:
+                    type: string
+                    description: "Generated JWT success token"
+        '401':
+          description: "The id token has not been retrieved"
+        '400':
+          description: "The id token is either invalid or has expired"

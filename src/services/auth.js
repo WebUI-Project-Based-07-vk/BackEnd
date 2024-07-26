@@ -18,10 +18,13 @@ const { OAuth2Client } = require('google-auth-library')
 const {
   gmailCredentials: { clientId }
 } = require('~/configs/config')
+const { getHash, compareHashes } = require('~/utils/hashHelper')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
-    const user = await createUser(role, firstName, lastName, email, password, language)
+    const passwordHash = await getHash(password)
+
+    const user = await createUser(role, firstName, lastName, email, passwordHash, language)
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id, role })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
@@ -39,7 +42,7 @@ const authService = {
       throw createError(401, USER_NOT_FOUND)
     }
 
-    const checkedPassword = password === user.password || isFromGoogle
+    const checkedPassword = (await compareHashes(password, user.password)) || isFromGoogle
 
     if (!checkedPassword) {
       throw createError(401, INCORRECT_CREDENTIALS)
@@ -106,8 +109,10 @@ const authService = {
       throw createError(400, BAD_RESET_TOKEN)
     }
 
+    const passwordHash = await getHash(password)
+
     const { id: userId, firstName, email } = tokenData
-    await privateUpdateUser(userId, { password })
+    await privateUpdateUser(userId, { password: passwordHash })
 
     await tokenService.removeResetToken(userId)
 

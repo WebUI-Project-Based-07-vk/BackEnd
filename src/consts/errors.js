@@ -135,6 +135,10 @@ const errors = {
   VALIDATION_ERROR: (message) => ({
     code: 'VALIDATION_ERROR',
     message: message
+  }),
+  PASSWORD_HASH_ERROR: (message) => ({
+    code: 'PASSWORD_HASH_ERROR',
+    message: message
   })
 }
 
