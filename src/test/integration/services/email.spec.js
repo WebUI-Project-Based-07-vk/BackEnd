@@ -9,6 +9,13 @@ const {
 } = require('~/configs/config')
 
 jest.mock('email-templates')
+// jest.mock('email-templates', () => {
+//   return jest.fn().mockImplementation(() => {
+//     return {
+//       render: jest.fn(),
+//     }
+//   })
+// })
 jest.mock('~/utils/mailer')
 
 
@@ -34,12 +41,21 @@ describe('email service', () => {
     }
     const mockHtml = '<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>'
 
+    const mockRender = jest.fn().mockResolvedValue(mockHtml)
+    jest.mock('email-templates', () => {
+      return jest.fn().mockImplementation(() => {
+        return {
+          render: mockRender,
+        }
+      })
+    })
+
     beforeEach(() => {
       jest.resetAllMocks()
       templateList[mockParams.subject] = mockTemplateList[mockParams.subject]
       // EmailTemplates.mockImplementation(() => {
       //   return {
-      //     render: jest.fn().mockResolvedValue(mockHtml)
+      //     render: mockRender
       //   }
       // })
       sendMail.mockResolvedValue(true)
@@ -67,14 +83,14 @@ describe('email service', () => {
 
       const mockTemplate = mockTemplateList[mockParams.subject][mockParams.lang]
 
-      const emailTemplatesMock = jest.spyOn(EmailTemplates.prototype, 'render').mockImplementation(jest.fn().mockResolvedValue(mockHtml))
+      // const emailTemplatesMock = jest.spyOn(EmailTemplates.prototype, 'render')
 
       // const emailTemplates = new EmailTemplates()
       // const result = await emailTemplates.render('en/test-subject', mockParams.text)
       // console.log(result)
       // expect(result).toBe(mockHtml)
 
-      expect(emailTemplatesMock).toHaveBeenCalledWith(mockTemplate.template, mockParams.text)
+      expect(mockRender).toHaveBeenCalledWith(mockTemplate.template, mockParams.text)
       expect(sendMail).toHaveBeenCalledWith({
         from: `Space2Study <${user}>`,
         to: mockParams.email,
