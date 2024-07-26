@@ -1,5 +1,4 @@
 const emailService = require('~/services/email')
-const EmailTemplates = require('email-templates')
 const { sendMail } = require('~/utils/mailer')
 const { templateList } = require('~/emails')
 const { TEMPLATE_NOT_FOUND } = require('~/consts/errors')
@@ -8,95 +7,72 @@ const {
   gmailCredentials: { user }
 } = require('~/configs/config')
 
-jest.mock('email-templates')
-// jest.mock('email-templates', () => {
-//   return jest.fn().mockImplementation(() => {
-//     return {
-//       render: jest.fn(),
-//     }
-//   })
-// })
+let mockRender = jest.fn()
+jest.mock('email-templates', () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      render: (...args) => mockRender(...args)
+    }
+  })
+})
 jest.mock('~/utils/mailer')
 
-
-describe('email service', () => {
-  describe('sendEmail method', () => {
-    const mockParams = {
+describe('sendEmail method', () => {
+  const mockParams = {
+    email: 'test@gmail.com',
+    subject: 'testSubject',
+    lang: 'en',
+    text: {
+      confirmToken: 'confirmToken',
       email: 'test@gmail.com',
-      subject: 'testSubject',
-      lang: 'en',
-      text: {
-        confirmToken: 'confirmToken',
-        email: 'test@gmail.com',
-        firstName: 'testName'
+      firstName: 'testName'
+    }
+  }
+  const mockTemplateList = {
+    [mockParams.subject]: {
+      [mockParams.lang]: {
+        subject: 'Test Subject',
+        template: 'en/test-subject'
       }
     }
-    const mockTemplateList = {
-      [mockParams.subject]: {
-        [mockParams.lang]: {
-          subject: 'Test Subject',
-          template: 'en/test-subject'
-        }
-      }
-    }
-    const mockHtml = '<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>'
+  }
+  const mockHtml = '<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>'
 
-    const mockRender = jest.fn().mockResolvedValue(mockHtml)
-    jest.mock('email-templates', () => {
-      return jest.fn().mockImplementation(() => {
-        return {
-          render: mockRender,
-        }
-      })
-    })
+  beforeEach(() => {
+    jest.resetAllMocks()
+    templateList[mockParams.subject] = mockTemplateList[mockParams.subject]
+    sendMail.mockResolvedValue(true)
+    mockRender.mockResolvedValue(mockHtml)
+  })
 
-    beforeEach(() => {
-      jest.resetAllMocks()
-      templateList[mockParams.subject] = mockTemplateList[mockParams.subject]
-      // EmailTemplates.mockImplementation(() => {
-      //   return {
-      //     render: mockRender
-      //   }
-      // })
-      sendMail.mockResolvedValue(true)
-    })
+  afterEach(() => {
+    jest.resetAllMocks()
+    delete templateList[mockParams.subject]
+  })
 
-    afterEach(() => {
-      jest.resetAllMocks()
-      delete templateList[mockParams.subject]
-    })
+  it('Should return TEMPLATE_NOT_FOUND error if template not found', async () => {
+    const response = emailService.sendEmail(mockParams.email, null, mockParams.lang, mockParams.text)
 
-    it('Should return TEMPLATE_NOT_FOUND error if template not found', async () => {
-      const response = emailService.sendEmail(mockParams.email, null, mockParams.lang, mockParams.text)
+    await expect(response).rejects.toThrowError(createError(404, TEMPLATE_NOT_FOUND))
+  })
 
-      await expect(response).rejects.toThrowError(createError(404, TEMPLATE_NOT_FOUND))
-    })
+  it('Should return TEMPLATE_NOT_FOUND error if template language not found', async () => {
+    const response = emailService.sendEmail(mockParams.email, mockParams.subject, null, mockParams.text)
 
-    it('Should return TEMPLATE_NOT_FOUND error if template language not found', async () => {
-      const response = emailService.sendEmail(mockParams.email, mockParams.subject, null, mockParams.text)
+    await expect(response).rejects.toThrowError(createError(404, TEMPLATE_NOT_FOUND))
+  })
 
-      await expect(response).rejects.toThrowError(createError(404, TEMPLATE_NOT_FOUND))
-    })
+  it('Should send an email with the correct params', async () => {
+    await emailService.sendEmail(mockParams.email, mockParams.subject, mockParams.lang, mockParams.text)
 
-    it('Should send an email with the correct params', async () => {
-      await emailService.sendEmail(mockParams.email, mockParams.subject, mockParams.lang, mockParams.text)
+    const mockTemplate = mockTemplateList[mockParams.subject][mockParams.lang]
 
-      const mockTemplate = mockTemplateList[mockParams.subject][mockParams.lang]
-
-      // const emailTemplatesMock = jest.spyOn(EmailTemplates.prototype, 'render')
-
-      // const emailTemplates = new EmailTemplates()
-      // const result = await emailTemplates.render('en/test-subject', mockParams.text)
-      // console.log(result)
-      // expect(result).toBe(mockHtml)
-
-      expect(mockRender).toHaveBeenCalledWith(mockTemplate.template, mockParams.text)
-      expect(sendMail).toHaveBeenCalledWith({
-        from: `Space2Study <${user}>`,
-        to: mockParams.email,
-        subject: mockTemplate.subject,
-        html: mockHtml
-      })
+    expect(mockRender).toHaveBeenCalledWith(mockTemplate.template, mockParams.text)
+    expect(sendMail).toHaveBeenCalledWith({
+      from: `Space2Study <${user}>`,
+      to: mockParams.email,
+      subject: mockTemplate.subject,
+      html: mockHtml
     })
   })
 })
