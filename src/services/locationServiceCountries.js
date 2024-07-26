@@ -3,10 +3,10 @@ const { COUNTRYSTATECITY_API_ISSUE } = require('~/consts/errors')
 
 const locationServiceCountries = {
   getCountries: async (api_key) => {
-    var headers = new Headers()
+    const headers = new Headers()
     headers.append('X-CSCAPI-KEY', api_key)
 
-    var requestOptions = {
+    const requestOptions = {
       method: 'GET',
       headers: headers,
       redirect: 'follow'
