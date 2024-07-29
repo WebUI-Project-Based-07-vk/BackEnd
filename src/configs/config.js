@@ -11,7 +11,8 @@ const config = {
   JWT_RESET_SECRET: process.env.JWT_RESET_SECRET,
   JWT_RESET_EXPIRES_IN: process.env.JWT_RESET_EXPIRES_IN,
   JWT_CONFIRM_SECRET: process.env.JWT_CONFIRM_SECRET,
-  JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN
+  JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN,
+  HASH_SALT_ROUNDS: Number(process.env.HASH_SALT_ROUNDS)
 }
 
 const gmailCredentials = {

@@ -22,6 +22,7 @@ const resourcesCategoryService = {
 
     return { count, items }
   },
+
   getResourcesCategoriesNames: async (match) => {
     return await ResourcesCategory.find(match).select('name').exec()
   },

@@ -1,0 +1,14 @@
+paths:
+  /constants/spoken-lang:
+    get:
+      summary: Get spoken langs
+      description: Returns list of spoken langs
+      responses:
+        '200':
+          description: Returned list of spoken langs
+          content:
+            application/json:
+              schema:
+              type: array
+              items:
+                type: string
