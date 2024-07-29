@@ -36,4 +36,8 @@ const azureAccess = {
   AZURE_HOST: process.env.AZURE_HOST
 }
 
-module.exports = { config, gmailCredentials, superAdmin, azureAccess }
+const countrystatecityCredentials = {
+  API_KEY: process.env.COUNTRYSTATECITY_API_KEY
+}
+
+module.exports = { config, gmailCredentials, superAdmin, azureAccess, countrystatecityCredentials }

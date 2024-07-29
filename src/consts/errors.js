@@ -3,6 +3,10 @@ const {
 } = require('~/consts/validation')
 
 const errors = {
+  COUNTRYSTATECITY_API_ISSUE: {
+    code: 'COUNTRYSTATECITY_API_ISSUE',
+    message: 'Some issue occurred while polling CountryStateCity.in API.'
+  },
   USER_NOT_FOUND: {
     code: 'USER_NOT_FOUND',
     message: 'User with the specified email was not found.'
