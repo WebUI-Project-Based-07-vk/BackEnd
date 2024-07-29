@@ -6,6 +6,8 @@ const {
 const {
   tokenNames: { REFRESH_TOKEN, ACCESS_TOKEN }
 } = require('~/consts/auth')
+const { ID_TOKEN_NOT_RETRIEVED, REFRESH_TOKEN_NOT_RETRIEVED } = require('~/consts/errors')
+const { createError } = require('~/utils/errorsHelper')
 
 const COOKIE_OPTIONS = {
   maxAge: oneDayInMs,
@@ -32,9 +34,7 @@ const login = async (req, res) => {
   res.cookie(ACCESS_TOKEN, tokens.accessToken, COOKIE_OPTIONS)
   res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
 
-  delete tokens.refreshToken
-
-  res.status(200).json(tokens)
+  res.status(200).json({ accessToken: tokens.accessToken })
 }
 
 const logout = async (req, res) => {
@@ -53,8 +53,7 @@ const refreshAccessToken = async (req, res) => {
 
   if (!refreshToken) {
     res.clearCookie(ACCESS_TOKEN)
-
-    return res.status(401).end()
+    throw createError(401, REFRESH_TOKEN_NOT_RETRIEVED)
   }
 
   const tokens = await authService.refreshAccessToken(refreshToken)
@@ -62,9 +61,7 @@ const refreshAccessToken = async (req, res) => {
   res.cookie(ACCESS_TOKEN, tokens.accessToken, COOKIE_OPTIONS)
   res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
 
-  delete tokens.refreshToken
-
-  res.status(200).json(tokens)
+  res.status(200).json({ accessToken: tokens.accessToken })
 }
 
 const sendResetPasswordEmail = async (req, res) => {
@@ -86,11 +83,27 @@ const updatePassword = async (req, res) => {
   res.status(204).end()
 }
 
+const googleLogin = async (req, res) => {
+  const idToken = req.body.token?.credential
+
+  if (!idToken) throw createError(401, ID_TOKEN_NOT_RETRIEVED)
+
+  const ticket = await authService.getGoogleClientTicket(idToken)
+
+  const tokens = await authService.login(ticket.email, null, true)
+
+  res.cookie(ACCESS_TOKEN, tokens.accessToken, COOKIE_OPTIONS)
+  res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
+
+  res.status(200).json({ accessToken: tokens.accessToken })
+}
+
 module.exports = {
   signup,
   login,
   logout,
   refreshAccessToken,
   sendResetPasswordEmail,
-  updatePassword
+  updatePassword,
+  googleLogin
 }
