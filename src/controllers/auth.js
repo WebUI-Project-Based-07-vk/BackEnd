@@ -88,14 +88,15 @@ const updatePassword = async (req, res) => {
 
 const confirmEmail = async (req, res) => {
   try {
-    const { token } = req.query
+    const { token } = req.params
     await authService.confirmEmail(token)
-    res.status(200).json({ message: 'Email confirmed successfully' })
+    console.log('Email confirmed successfully')
+    res.status(200).redirect(`${process.env.CLIENT_URL}`)
   } catch (error) {
+    console.error('Error confirming email:', error)
     res.status(400).send(error.message)
   }
 }
-
 module.exports = {
   signup,
   login,

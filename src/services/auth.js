@@ -13,7 +13,6 @@ const emailSubject = require('~/consts/emailSubject')
 const {
   tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
-const { confirmEmail } = require('~/controllers/auth')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
@@ -28,17 +27,17 @@ const authService = {
     }
   },
 
-  confirmEmail : async (token) => {
-    const tokenData = tokenService.validateConfirmToken(token);
+  confirmEmail: async (confirmToken) => {
+    const tokenData = tokenService.validateConfirmToken(confirmToken)
 
-    if(!tokenData){
-      throw createError(400, EMAIL_NOT_CONFIRMED);
+    if (!tokenData) {
+      throw createError(400, EMAIL_NOT_CONFIRMED)
     }
 
-    const userId = tokenData.id;
-    await privateUpdateUser(userId, {isEmailConfirmed: true});
+    const userId = tokenData.id
+    await privateUpdateUser(userId, { isEmailConfirmed: true })
 
-    await tokenService.removeConfirmToken(userId);
+    await tokenService.removeConfirmToken(userId)
   },
 
   login: async (email, password, isFromGoogle) => {
@@ -48,7 +47,7 @@ const authService = {
       throw createError(401, USER_NOT_FOUND)
     }
 
-    const checkedPassword = (password === user.password) || isFromGoogle
+    const checkedPassword = password === user.password || isFromGoogle
 
     if (!checkedPassword) {
       throw createError(401, INCORRECT_CREDENTIALS)
