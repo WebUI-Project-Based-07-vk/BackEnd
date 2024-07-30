@@ -33,4 +33,6 @@ router.patch(
   asyncWrapper(authController.updatePassword)
 )
 
+router.get('/confirm-email/:token', asyncWrapper(authController.confirmEmail))
+
 module.exports = router

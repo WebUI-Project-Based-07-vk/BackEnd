@@ -83,6 +83,17 @@ const updatePassword = async (req, res) => {
   res.status(204).end()
 }
 
+const confirmEmail = async (req, res) => {
+  try {
+    const { token } = req.params
+    await authService.confirmEmail(token)
+    console.log('Email confirmed successfully')
+    res.status(200).redirect(`${process.env.CLIENT_URL}`)
+  } catch (error) {
+    console.error('Error confirming email:', error)
+    res.status(400).send(error.message)
+  }
+}
 const googleLogin = async (req, res) => {
   const idToken = req.body.token?.credential
 
@@ -97,7 +108,6 @@ const googleLogin = async (req, res) => {
 
   res.status(200).json({ accessToken: tokens.accessToken })
 }
-
 module.exports = {
   signup,
   login,
@@ -105,5 +115,6 @@ module.exports = {
   refreshAccessToken,
   sendResetPasswordEmail,
   updatePassword,
+  confirmEmail,
   googleLogin
 }

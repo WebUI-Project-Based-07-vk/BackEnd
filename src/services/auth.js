@@ -35,13 +35,26 @@ const authService = {
     }
   },
 
+  confirmEmail: async (confirmToken) => {
+    const tokenData = tokenService.validateConfirmToken(confirmToken)
+
+    if (!tokenData) {
+      throw createError(400, EMAIL_NOT_CONFIRMED)
+    }
+
+    const userId = tokenData.id
+    await privateUpdateUser(userId, { isEmailConfirmed: true })
+
+    await tokenService.removeConfirmToken(userId)
+  },
+
   login: async (email, password, isFromGoogle) => {
     const user = await getUserByEmail(email)
 
     if (!user) {
       throw createError(401, USER_NOT_FOUND)
     }
-
+    
     const checkedPassword = (await compareHashes(password, user.password)) || isFromGoogle
 
     if (!checkedPassword) {
