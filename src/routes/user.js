@@ -4,6 +4,7 @@ const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { restrictTo, authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
+const photoMiddleware = require('~/middlewares/photoUrl')
 
 const userController = require('~/controllers/user')
 const User = require('~/models/user')
@@ -17,8 +18,8 @@ router.use(authMiddleware)
 
 router.param('id', idValidation)
 
-router.get('/', asyncWrapper(userController.getUsers))
-router.get('/:id', isEntityValid({ params }), asyncWrapper(userController.getUserById))
+router.get('/', photoMiddleware, asyncWrapper(userController.getUsers))
+router.get('/:id', photoMiddleware, isEntityValid({ params }), asyncWrapper(userController.getUserById))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(userController.updateUser))
 
 router.use(restrictTo(ADMIN))

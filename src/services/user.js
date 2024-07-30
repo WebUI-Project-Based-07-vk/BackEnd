@@ -4,6 +4,7 @@ const { createError } = require('~/utils/errorsHelper')
 const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
+const { uploadFile, deleteFile } = require('~/services/fireBaseMediaStorage')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -79,6 +80,10 @@ const userService = {
       throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
     }
 
+    if ('photo' in filteredUpdateData) {
+      filteredUpdateData.photo = await uploadFile(filteredUpdateData.photo, id)
+    }
+
     filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
@@ -100,6 +105,7 @@ const userService = {
 
   deleteUser: async (id) => {
     await User.findByIdAndRemove(id).exec()
+    await deleteFile(id)
   }
 }
 
