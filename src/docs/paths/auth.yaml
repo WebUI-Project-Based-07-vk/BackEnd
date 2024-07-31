@@ -128,6 +128,21 @@ paths:
           description: "No Content: Password updated successfully"
         '400':
           description: "Bad request: Invalid password format"
+  /auth/confirm-email/{token}:
+    patch:
+      summary: "Confirm Email"
+      description: "Confirm user's email after registration"
+      parameters:
+        - in: path
+          name: token
+          required: true
+          description: "Email confirmation token"
+          type: string
+      responses:
+        '200':
+          description: "No Content: Email confirmed successfully"
+        '400':
+          description: "Bad request: Error confirming email"
 
   /auth/google-auth:
     post:
