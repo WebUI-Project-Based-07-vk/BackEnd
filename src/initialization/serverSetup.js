@@ -1,6 +1,7 @@
 const databaseInitialization = require('~/initialization/database')
 const checkUserExistence = require('~/seed/checkUserExistence')
 const initialization = require('~/initialization/initialization')
+const { initFireBase } = require('~/initialization/firebase')
 const logger = require('~/logger/logger')
 const {
   config: { SERVER_PORT }
@@ -10,6 +11,7 @@ const scheduledCronJobs = require('~/cron-jobs/scheduledCronJobs')
 const serverSetup = async (app) => {
   await databaseInitialization()
   await checkUserExistence()
+  initFireBase()
   initialization(app)
   return app.listen(SERVER_PORT, () => {
     logger.info(`Server is running on port ${SERVER_PORT}`)

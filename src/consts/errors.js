@@ -143,6 +143,18 @@ const errors = {
   PASSWORD_HASH_ERROR: (message) => ({
     code: 'PASSWORD_HASH_ERROR',
     message: message
+  }),
+  FIREBASE_UPLOAD_ERROR: (message) => ({
+    code: 'FIREBASE_UPLOAD_ERROR',
+    message: message
+  }),
+  FIREBASE_GET_LINK_ERROR: (message) => ({
+    code: 'FIREBASE_GET_LINK_ERROR',
+    message: message
+  }),
+  FIREBASE_DELETE_ERROR: (message) => ({
+    code: 'FIREBASE_DELETE_ERROR',
+    message: message
   })
 }
 
