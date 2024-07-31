@@ -1,0 +1,12 @@
+paths:
+  /get-country-list:
+    get:
+      summary: "Get country list"
+      description: "Get country list using countrystatecity.in API"
+      responses:
+        '200':
+          description: "OK: country list is returned in JSON format"
+        '401':
+          description: "Unauthorized: most likely invalid API key"
+        '404':
+          description: "Not found: hypothetically this shouldn't happen at all"

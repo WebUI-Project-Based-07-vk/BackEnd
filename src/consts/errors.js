@@ -3,6 +3,10 @@ const {
 } = require('~/consts/validation')
 
 const errors = {
+  COUNTRYSTATECITY_API_ISSUE: {
+    code: 'COUNTRYSTATECITY_API_ISSUE',
+    message: 'Some issue occurred while polling CountryStateCity.in API.'
+  },
   USER_NOT_FOUND: {
     code: 'USER_NOT_FOUND',
     message: 'User with the specified email was not found.'
@@ -87,6 +91,18 @@ const errors = {
     code: 'API_TOKEN_NOT_RETRIEVED',
     message: 'The access token has not been retrieved.'
   },
+  REFRESH_TOKEN_NOT_RETRIEVED: {
+    code: 'REFRESH_TOKEN_NOT_RETRIEVED',
+    message: 'The refresh token has not been retrieved.'
+  },
+  ID_TOKEN_NOT_RETRIEVED: {
+    code: 'ID_TOKEN_NOT_RETRIEVED',
+    message: 'The id token has not been retrieved.'
+  },
+  BAD_ID_TOKEN: {
+    code: 'BAD_ID_TOKEN',
+    message: 'The id token is either invalid or has expired.'
+  },
   EMAIL_NOT_SENT: {
     code: 'EMAIL_NOT_SENT',
     message: 'Email has not been sent.'
@@ -122,6 +138,10 @@ const errors = {
   }),
   VALIDATION_ERROR: (message) => ({
     code: 'VALIDATION_ERROR',
+    message: message
+  }),
+  PASSWORD_HASH_ERROR: (message) => ({
+    code: 'PASSWORD_HASH_ERROR',
     message: message
   })
 }

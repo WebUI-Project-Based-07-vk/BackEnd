@@ -1,0 +1,12 @@
+paths:
+  /get-city-list/{iso2_country_code}:
+    get:
+      summary: "Get city list"
+      description: "Get city list using countrystatecity.in API. Parameter is an ISO2 code of the country (like UA)"
+      responses:
+        '200':
+          description: "OK: city list is returned in JSON format"
+        '401':
+          description: "Unauthorized: most likely invalid API key"
+        '404':
+          description: "Not found: hypothetically this shouldn't happen at all"
