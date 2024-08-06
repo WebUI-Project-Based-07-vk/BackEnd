@@ -88,10 +88,11 @@ const confirmEmail = async (req, res) => {
     const { token } = req.params
     await authService.confirmEmail(token)
     console.log('Email confirmed successfully')
-    res.status(200).redirect(`${process.env.CLIENT_URL}`)
+    res.status(200).redirect(`${process.env.CLIENT_URL}/success`)
+    // res.status(200).redirect(`${process.env.CLIENT_URL}`)
   } catch (error) {
     console.error('Error confirming email:', error)
-    res.status(400).send(error.message)
+    res.status(400).redirect(`${process.env.CLIENT_URL}/error?status=${encodeURIComponent(error.message)}`)
   }
 }
 const googleLogin = async (req, res) => {
