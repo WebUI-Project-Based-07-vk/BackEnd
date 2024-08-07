@@ -1,0 +1,31 @@
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "Name of the category"
+          example: "Category Name"
+        appearance:
+          type: object
+          properties:
+            icon:
+              type: string
+              description: "Path to the icon"
+              example: "mocked-path-to-icon"
+            color:
+              type: string
+              description: "Hex code for the color"
+              example: "#66C42C"
+          required:
+            - icon
+            - color
+      required:
+        - name
+        - appearance
+      example:
+        name: "Category Name"
+        appearance:
+          icon: "mocked-path-to-icon"
+          color: "#66C42C"
