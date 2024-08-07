@@ -82,18 +82,23 @@ const updatePassword = async (req, res) => {
 
   res.status(204).end()
 }
-
 const confirmEmail = async (req, res) => {
   try {
     const { token } = req.params
     await authService.confirmEmail(token)
-    console.log('Email confirmed successfully')
-    res.status(200).redirect(`${process.env.CLIENT_URL}`)
+    res.status(200).json({ message: 'Email confirmed successfully' })
   } catch (error) {
     console.error('Error confirming email:', error)
-    res.status(400).send(error.message)
+    if (error.code === 'EMAIL_ALREADY_CONFIRMED') {
+      res.status(409).json({ message: 'Email already confirmed' })
+    } else if (error.code === 'BAD_CONFIRM_TOKEN') {
+      res.status(400).json({ message: 'Invalid or expired token' })
+    } else {
+      res.status(500).json({ message: 'Internal Server Error' })
+    }
   }
 }
+
 const googleLogin = async (req, res) => {
   const idToken = req.body.token?.credential
 
