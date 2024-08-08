@@ -1,7 +1,7 @@
 const Subject = require('~/models/subject')
 const subjectService = require('~/services/subject')
 const { createError } = require('~/utils/errorsHelper')
-const { INTERNAL_SERVER_ERROR } = require('~/consts/errors')
+const { INTERNAL_SERVER_ERROR, INVALID_ID } = require('~/consts/errors')
 
 jest.mock('~/models/subject')
 jest.mock('~/utils/errorsHelper', () => ({
@@ -50,6 +50,32 @@ describe('subjectService', () => {
       expect(subjects).toEqual([])
       expect(Subject.find).toHaveBeenCalledTimes(1)
       expect(Subject.find().exec).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('getSubjectById', () => {
+    it('should return a subject when findById is successful', async () => {
+      const mockSubject = { name: 'Math', _id: '123' }
+      const subjectId = '123'
+      Subject.findById.mockResolvedValue(mockSubject)
+
+      const subject = await subjectService.getSubjectById(subjectId)
+
+      expect(subject).toBe(mockSubject)
+      expect(Subject.findById).toHaveBeenCalledWith(subjectId)
+      expect(Subject.findById).toHaveBeenCalledTimes(1)
+    })
+
+    it('should throw an error when findById fails', async () => {
+      const error = new Error('Database error')
+      const subjectId = '123'
+      Subject.findById.mockRejectedValue(error)
+
+      const mockError = createError(404, INVALID_ID)
+      createError.mockReturnValue(mockError)
+
+      await expect(subjectService.getSubjectById(subjectId)).rejects.toEqual(mockError)
+      expect(createError).toHaveBeenCalledWith(404, INVALID_ID)
     })
   })
 })
