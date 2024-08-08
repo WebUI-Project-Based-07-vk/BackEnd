@@ -39,5 +39,17 @@ describe('subjectService', () => {
       await expect(subjectService.getSubjects()).rejects.toEqual(mockError)
       expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
     })
+
+    it('should return an empty array when no subjects are found', async () => {
+      Subject.find.mockReturnValue({
+        exec: jest.fn().mockResolvedValue([])
+      })
+
+      const subjects = await subjectService.getSubjects()
+
+      expect(subjects).toEqual([])
+      expect(Subject.find).toHaveBeenCalledTimes(1)
+      expect(Subject.find().exec).toHaveBeenCalledTimes(1)
+    })
   })
 })
