@@ -78,4 +78,48 @@ describe('subjectService', () => {
       expect(createError).toHaveBeenCalledWith(404, INVALID_ID)
     })
   })
+
+  describe('createSubject', () => {
+    it('should create and return a populated subject when valid data is provided', async () => {
+      const mockSubject = {
+        name: 'Physics',
+        category: 'category_id',
+        populate: jest.fn().mockResolvedValue({
+          name: 'Physics',
+          category: { _id: 'category_id', name: 'Science' }
+        })
+      }
+
+      const subjectData = { name: 'Physics', category: 'category_id' }
+      Subject.create.mockResolvedValue(mockSubject)
+
+      const result = await subjectService.createSubject(subjectData)
+
+      expect(Subject.create).toHaveBeenCalledWith({
+        name: 'Physics',
+        category: 'category_id'
+      })
+      expect(mockSubject.populate).toHaveBeenCalledWith({
+        path: 'category',
+        select: '_id name'
+      })
+      expect(result).toEqual({
+        name: 'Physics',
+        category: { _id: 'category_id', name: 'Science' }
+      })
+    })
+
+    it('should throw an error when creation fails', async () => {
+      const error = new Error('Database error')
+      Subject.create.mockRejectedValue(error)
+
+      const mockError = createError(500, INTERNAL_SERVER_ERROR)
+      createError.mockReturnValue(mockError)
+
+      await expect(subjectService.createSubject({ name: 'Physics', category: 'category_id' })).rejects.toEqual(
+        mockError
+      )
+      expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
+    })
+  })
 })

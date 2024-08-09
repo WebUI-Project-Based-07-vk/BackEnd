@@ -22,13 +22,18 @@ const subjectService = {
   },
 
   createSubject: async (data) => {
-    const { name, category } = data
+    try {
+      const { name, category } = data
 
-    const subject = await Subject.create({
-      name,
-      category
-    })
-    return await subject.populate({ path: 'category', select: '_id name' })
+      const subject = await Subject.create({
+        name,
+        category
+      })
+
+      return await subject.populate({ path: 'category', select: '_id name' })
+    } catch (error) {
+      throw createError(500, INTERNAL_SERVER_ERROR)
+    }
   }
 }
 
