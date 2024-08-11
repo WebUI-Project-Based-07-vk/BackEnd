@@ -8,6 +8,8 @@ const {
   config: { CLIENT_URL }
 } = require('~/configs/config')
 const router = require('~/routes')
+const locationServiceCountriesRoutes = require('~/routes/locationServiceCountries')
+const locationServiceCitiesRoutes = require('~/routes/locationServiceCities')
 const { createNotFoundError } = require('~/utils/errorsHelper')
 const errorMiddleware = require('~/middlewares/error')
 
@@ -25,6 +27,9 @@ const initialization = (app) => {
   )
 
   app.use('/', router)
+
+  router.use('/api/location', locationServiceCountriesRoutes)
+  router.use('/api/location', locationServiceCitiesRoutes)
 
   app.use('/api-docs', swaggerui.serve, swaggerui.setup(swaggerDocs))
 
