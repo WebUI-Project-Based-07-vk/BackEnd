@@ -1,6 +1,5 @@
 const Subject = require('~/models/subject')
 const { createError } = require('../utils/errorsHelper')
-
 const { INTERNAL_SERVER_ERROR, INVALID_ID } = require('~/consts/errors')
 
 const subjectService = {
@@ -19,6 +18,21 @@ const subjectService = {
       return subject
     } catch (error) {
       throw createError(404, INVALID_ID)
+    }
+  },
+
+  createSubject: async (data) => {
+    try {
+      const { name, category } = data
+
+      const subject = await Subject.create({
+        name,
+        category
+      })
+
+      return await subject.populate({ path: 'category', select: '_id name' })
+    } catch (error) {
+      throw createError(500, INTERNAL_SERVER_ERROR)
     }
   }
 }

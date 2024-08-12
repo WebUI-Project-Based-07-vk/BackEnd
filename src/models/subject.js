@@ -10,7 +10,7 @@ const subjectSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('name')],
       unique: true
     },
-    сategory: {
+    category: {
       type: Schema.Types.ObjectId,
       ref: CATEGORY
     }
