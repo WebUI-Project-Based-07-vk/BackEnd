@@ -8,7 +8,7 @@ const getCountryList = async (req, res) => {
     const country_list = await locationServiceCountries.getCountries(API_KEY)
     res.status(200).json(country_list)
   } catch (error) {
-    res.status(error.statusCode || 500).json({ error: error.message || 'Failed to fetch countries' })
+    res.status(error.statusCode || 401).json({ error: error.message || 'Failed to fetch countries' })
   }
 }
 

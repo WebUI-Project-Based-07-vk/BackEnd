@@ -10,7 +10,7 @@ const getCityList = async (req, res) => {
     const city_list = await locationServiceCities.getCities(iso2_code, countryName)
     res.status(200).json(city_list)
   } catch (error) {
-    res.status(error.statusCode || 500).json({ error: error.message || 'Failed to fetch cities' })
+    res.status(error.statusCode || 401).json({ error: error.message || 'Failed to fetch cities' })
   }
 }
 

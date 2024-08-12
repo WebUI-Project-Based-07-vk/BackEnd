@@ -1,9 +1,10 @@
+const { PATH } = require('~/consts/countryCity')
 const { createError } = require('~/utils/errorsHelper')
 const { COUNTRYSTATECITY_API_ISSUE } = require('~/consts/errors')
 
 const createRequestOptions = () => {
   const headers = new Headers()
-  headers.append('X-CSCAPI-KEY', process.env.COUNTRYSTATECITY_API_KEY)
+  headers.append('X-CSCAPI-KEY', PATH)
 
   return {
     method: 'GET',
@@ -43,7 +44,7 @@ const locationServiceCountries = {
 
       return formattedCountriesData
     } catch (error) {
-      throw createError(500, COUNTRYSTATECITY_API_ISSUE)
+      throw createError(401, COUNTRYSTATECITY_API_ISSUE)
     }
   },
 

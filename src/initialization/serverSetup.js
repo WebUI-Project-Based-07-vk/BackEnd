@@ -1,4 +1,3 @@
-require('dotenv').config()
 const databaseInitialization = require('~/initialization/database')
 const checkUserExistence = require('~/seed/checkUserExistence')
 const initialization = require('~/initialization/initialization')
