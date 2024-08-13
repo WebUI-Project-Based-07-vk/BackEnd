@@ -1,4 +1,5 @@
 const Category = require('~/models/category')
+const Subject = require('~/models/subject')
 const { createError } = require('~/utils/errorsHelper')
 const { INTERNAL_SERVER_ERROR } = require('~/consts/errors')
 
@@ -7,6 +8,17 @@ const categoryService = {
     try {
       const categories = await Category.find().sort(sort).skip(skip).limit(limit).lean().exec()
       return categories
+    } catch (error) {
+      throw createError(500, INTERNAL_SERVER_ERROR)
+    }
+  },
+
+  getSubjectsNameByCategoryId: async (categoryId) => {
+    try {
+      const subjects = await Subject.find({ category: categoryId }).lean().exec()
+      const subjectsNames = subjects.map((subject) => ({ name: subject.name }))
+      const count = await Subject.countDocuments({ category: categoryId })
+      return { count, subjectsNames }
     } catch (error) {
       throw createError(500, INTERNAL_SERVER_ERROR)
     }
