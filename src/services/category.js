@@ -15,10 +15,9 @@ const categoryService = {
 
   getSubjectsNameByCategoryId: async (categoryId) => {
     try {
-      const subjects = await Subject.find({ category: categoryId }).lean().exec()
-      const subjectsNames = subjects.map((subject) => ({ name: subject.name }))
+      const subjects = await Subject.find({ category: categoryId }, '_id, name').lean().exec()
       const count = await Subject.countDocuments({ category: categoryId })
-      return { count, subjectsNames }
+      return { count, subjects }
     } catch (error) {
       throw createError(500, INTERNAL_SERVER_ERROR)
     }
