@@ -7,7 +7,8 @@ const categoryService = {
   getCategories: async (sort, skip = 0, limit = 10) => {
     try {
       const categories = await Category.find().sort(sort).skip(skip).limit(limit).lean().exec()
-      return categories
+      const count = await Category.countDocuments()
+      return { count, categories }
     } catch (error) {
       throw createError(500, INTERNAL_SERVER_ERROR)
     }
