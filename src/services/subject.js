@@ -34,6 +34,21 @@ const subjectService = {
     } catch (error) {
       throw createError(500, INTERNAL_SERVER_ERROR)
     }
+  },
+
+  updateSubject: async (id, data) => {
+    try {
+      const subject = await Subject.findById(id).exec()
+
+      for (let field in data) {
+        subject[field] = data[field]
+      }
+
+      await subject.save()
+      return subject.populate({ path: 'category', select: '_id name' })
+    } catch (error) {
+      throw createError(500, INTERNAL_SERVER_ERROR)
+    }
   }
 }
 
