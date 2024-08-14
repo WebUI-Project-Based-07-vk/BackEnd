@@ -8,10 +8,6 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const subjectController = require('~/controllers/subject')
 const Subject = require('~/models/subject')
 
-/*TEMP SOLUTION replace to category route when it appears*/
-// eslint-disable-next-line no-unused-vars
-const Category = require('~/models/category')
-
 const {
   roles: { ADMIN }
 } = require('~/consts/auth')

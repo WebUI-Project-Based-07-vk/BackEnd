@@ -10,7 +10,8 @@ const offer = require('~/routes/offer')
 const locationServiceCountries = require('~/routes/locationServiceCountries')
 const locationServiceCities = require('~/routes/locationServiceCities')
 const constants = require('~/routes/constants')
-const subjects = require('~/routes/subject')
+const category = require('~/routes/category')
+const subject = require('~/routes/subject')
 
 router.use('/auth', auth)
 router.use('/users', user)
@@ -22,6 +23,7 @@ router.use('/offers', offer)
 router.use('/get-country-list', locationServiceCountries)
 router.use('/get-city-list', locationServiceCities)
 router.use('/constants', constants)
-router.use('/subjects', subjects)
+router.use('/categories', category)
+router.use('/subjects', subject)
 
 module.exports = router
