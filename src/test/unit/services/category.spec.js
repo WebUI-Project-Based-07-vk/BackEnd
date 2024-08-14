@@ -1,9 +1,11 @@
 const categoryService = require('~/services/category')
 const Category = require('~/models/category')
+const Subject = require('~/models/Subject')
 const { createError } = require('~/utils/errorsHelper')
 const { INTERNAL_SERVER_ERROR } = require('~/consts/errors')
 
 jest.mock('~/models/category')
+jest.mock('~/models/subject')
 jest.mock('~/utils/errorsHelper')
 
 describe('categoryService', () => {
@@ -39,6 +41,46 @@ describe('categoryService', () => {
       createError.mockReturnValue(new Error(INTERNAL_SERVER_ERROR))
 
       await expect(categoryService.getCategories('name')).rejects.toThrow(new Error(INTERNAL_SERVER_ERROR))
+      expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
+    })
+  })
+
+  describe('getSubjectsNameByCategoryId', () => {
+    it('should return subject names and count when called with a valid category ID', async () => {
+      const categoryId = '66b4eaf3083ca75e2ac9a31e'
+      const mockSubjects = [{ name: 'New Subject' }, { name: 'Gold' }, { name: 'Subject' }, { name: 'Bitcoin' }]
+
+      Subject.find.mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockSubjects)
+      })
+      Subject.countDocuments.mockResolvedValue(mockSubjects.length)
+
+      const result = await categoryService.getSubjectsNameByCategoryId(categoryId)
+
+      expect(result).toEqual({
+        count: 4,
+        subjectsNames: [{ name: 'New Subject' }, { name: 'Gold' }, { name: 'Subject' }, { name: 'Bitcoin' }]
+      })
+      expect(Subject.find).toHaveBeenCalledWith({ category: categoryId })
+      expect(Subject.find().lean).toHaveBeenCalled()
+      expect(Subject.countDocuments).toHaveBeenCalledWith({ category: categoryId })
+    })
+
+    it('should throw a 500 error if an error occurs during fetching subjects', async () => {
+      const categoryId = '66b4eaf3083ca75e2ac9a31e'
+      const error = new Error('Database error')
+
+      Subject.find.mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockRejectedValue(error)
+      })
+      Subject.countDocuments.mockRejectedValue(error)
+      createError.mockReturnValue(new Error(INTERNAL_SERVER_ERROR))
+
+      await expect(categoryService.getSubjectsNameByCategoryId(categoryId)).rejects.toThrow(
+        new Error(INTERNAL_SERVER_ERROR)
+      )
       expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
     })
   })
