@@ -18,4 +18,6 @@ router.param('id', idValidation)
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.get('/:id/subjects/names', isEntityValid({ params }), categoryController.getSubjectsNamesByCategoryId)
 
+router.get('/names', asyncWrapper(categoryController.getCategoryNames))
+
 module.exports = router
