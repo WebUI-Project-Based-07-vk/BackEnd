@@ -1,0 +1,49 @@
+paths:
+  /subjects:
+    get:
+      summary: 'Get Subjects'
+      description: 'Retrieve a list of subjects based on query parameters'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved list of subjects'
+        '500':
+          description: 'Somthing wents wrong on server side'
+    post:
+      summary: 'Create Subject'
+      description: 'Create a new subject'
+      responses:
+        '201':
+          description: 'Created: New subject created successfully'
+        '403':
+          description: 'You do not have permission to perform this action.'
+        '500':
+          description: 'Something wents wrong while creating subject e.g. any validation error'
+  /subjects/{id}:
+    get:
+      summary: 'Get subject by ID'
+      description: 'Retrieve a specific subject using its ID'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 'ID of the subject'
+          type: string
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the subject'
+        '404':
+          description: 'Subject with the specified ID was not found. Or ID is invalid.'
+    patch:
+      summary: 'Update Subject'
+      description: 'Update an existing subject using its ID'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 'ID of the subject to be updated'
+          type: string
+      response:
+        '200':
+          descriptuion: 'Subject updated successfully'
+        '400':
+          description: 'Invalid id'
