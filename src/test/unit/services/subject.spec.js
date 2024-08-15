@@ -122,4 +122,14 @@ describe('subjectService', () => {
       expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
     })
   })
+  describe('deleteSubject', () => {
+    it('should delete the subject when findByIdAndRemove is successful', async () => {
+      const subjectId = '123'
+      Subject.findByIdAndRemove.mockReturnValue({
+        exec: jest.fn().mockResolvedValue({ _id: subjectId, name: 'Math' })
+      })
+      await subjectService.deleteSubject(subjectId)
+      expect(Subject.findByIdAndRemove).toHaveBeenCalledWith(subjectId)
+    })
+  })
 })

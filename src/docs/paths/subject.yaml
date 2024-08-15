@@ -1,0 +1,21 @@
+paths:
+  /subjects/{id}:
+    delete:
+      summary: Delete a subject by ID
+      description: Deletes a subject from the database using the provided ID.
+      tags:
+        - Subjects
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the subject to delete
+      responses:
+        '204':
+          description: No Content. Subject was successfully deleted.
+        '404':
+          description: Not Found. The subject with the given ID was not found.
+        '500':
+          description: Internal Server Error.
