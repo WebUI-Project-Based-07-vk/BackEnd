@@ -33,5 +33,19 @@
     "category": { "$oid": "64dfe0b9bcf86cd799439016" },
     "createdAt": "2024-08-15T09:04:00.000Z",
     "updatedAt": "2024-08-15T09:04:00.000Z"
+  },
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd79943901c" },
+    "name": "Ancient Civilizations",
+    "category": { "$oid": "64dfe0b9bcf86cd799439016" },
+    "createdAt": "2024-08-15T09:05:00.000Z",
+    "updatedAt": "2024-08-15T09:05:00.000Z"
+  },
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd79943901d" },
+    "name": "Renaissance Art",
+    "category": { "$oid": "64dfe0b9bcf86cd799439016" },
+    "createdAt": "2024-08-15T09:06:00.000Z",
+    "updatedAt": "2024-08-15T09:06:00.000Z"
   }
 ]
