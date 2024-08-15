@@ -11,7 +11,8 @@ async function getHash(plainText) {
 }
 
 async function compareHashes(plainText, hash) {
-  return bcrypt.compare(plainText, hash)
+  if (plainText) return bcrypt.compare(plainText, hash)
+  else return false
 }
 
 module.exports = { getHash, compareHashes }
