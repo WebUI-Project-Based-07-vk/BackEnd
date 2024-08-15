@@ -1,0 +1,18 @@
+components:
+  schemas:
+    Subject:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Name of the subject'
+          example: 'Mathematics'
+        category:
+          type: string
+          description: 'Category ID reference'
+          example: '612e6f28e5299b0015cbb3b7'
+      required:
+        - name
+      example:
+        name: 'Mathematics'
+        category: '612e6f28e5299b0015cbb3b7'
