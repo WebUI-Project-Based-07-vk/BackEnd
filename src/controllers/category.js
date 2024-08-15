@@ -10,6 +10,11 @@ const getCategories = async (req, res) => {
   res.status(200).json(categories)
 }
 
+const getCategoryById = async (req, res) => {
+  const category = await categoryService.getCategoryById(req, res)
+  res.status(200).json(category)
+}
+
 const addCategory = async (req, res) => {
   const newCategory = await categoryService.addCategory(req, res)
   res.status(200).json(newCategory)
@@ -30,6 +35,7 @@ const getCategoryNames = async (req, res) => {
 
 module.exports = {
   getCategories,
+  getCategoryById,
   getSubjectsNamesByCategoryId,
   getCategoryNames,
   addCategory,
