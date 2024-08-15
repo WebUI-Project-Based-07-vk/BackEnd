@@ -1,0 +1,16 @@
+paths:
+  /categories:
+    post:
+      summary: "Add category"
+      description: "Add category to the list of categories in the database"
+      responses:
+        '200':
+          description: "OK: a created category is returned"
+        '401':
+          description: "Unauthorized (adding categories requires being authorized as ADMIN)"
+        '403':
+          description: "Forbidden (adding categories requires being authorized as *ADMIN*)"
+        '409':
+          description: "Category already exists in the database"
+        '500':
+          description: "Something went wrong while adding the category (likely validation error)"
