@@ -24,7 +24,7 @@ const categoryService = {
   },
   getCategoryNames: async () => {
     try {
-      const categoryNames = await Category.find({}, 'name')
+      const categoryNames = await Category.find({}, 'name').lean().exec()
       const count = await Category.countDocuments()
 
       return { categoryNames, count }
