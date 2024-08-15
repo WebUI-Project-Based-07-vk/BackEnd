@@ -34,6 +34,14 @@ const subjectService = {
     } catch (error) {
       throw createError(500, INTERNAL_SERVER_ERROR)
     }
+  },
+
+  deleteSubject: async (id)=>{
+    try {
+      Subject.findByIdAndRemove(id).exec()
+    } catch (error){
+      throw createError(500, INTERNAL_SERVER_ERROR)
+    }
   }
 }
 
