@@ -1,0 +1,30 @@
+paths:
+  /categories/names:
+    get:
+      summary: "Get categories names"
+      description: "Endpoint for getting all categories names. Protected - accessible only for authorized users"
+      responses:
+        '200':
+          description: "Success: categories list is returned"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categoryNames:
+                    type: array
+                    description: "array of objects with _id and name of category"
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                        name:
+                          type: string
+                  count:
+                    type: number
+                    description: "Amount of category names that are returned"
+        '401':
+          description: "Unauthorized: invalid access token"
+        '404':
+          description: "Not found: returned when error occurs during request to DB"
