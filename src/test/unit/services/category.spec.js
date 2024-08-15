@@ -2,7 +2,7 @@ const categoryService = require('~/services/category')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const { createError } = require('~/utils/errorsHelper')
-const { INTERNAL_SERVER_ERROR } = require('~/consts/errors')
+const { INTERNAL_SERVER_ERROR, NOT_FOUND } = require('~/consts/errors')
 
 jest.mock('~/models/category')
 jest.mock('~/models/subject')
@@ -91,6 +91,49 @@ describe('categoryService', () => {
         new Error(INTERNAL_SERVER_ERROR)
       )
       expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
+    })
+  })
+
+  describe('getCategoryNames', () => {
+    afterEach(() => jest.clearAllMocks())
+
+    it('should return category names and count', async () => {
+      const categoryNamesMock = [
+        { _id: '66b5d09d3f423a59f09e8003', name: 'Languages' },
+        { _id: '66b5f03d45ac7cd55a8f9b2a', name: 'Computer science' }
+      ]
+
+      Category.find = jest.fn().mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(categoryNamesMock)
+      })
+      Category.countDocuments = jest.fn().mockResolvedValue(categoryNamesMock.length)
+
+      const result = await categoryService.getCategoryNames()
+
+      expect(result).toEqual({
+        categoryNames: categoryNamesMock,
+        count: categoryNamesMock.length
+      })
+      expect(Category.find).toHaveBeenCalledWith({}, 'name')
+      expect(Category.find().lean).toHaveBeenCalled()
+      expect(Category.countDocuments).toHaveBeenCalled()
+    })
+
+    it('should throw a 404 status code and NOT_FOUND error', async () => {
+      const error = new Error(NOT_FOUND)
+
+      Category.find = jest.fn().mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(error)
+      })
+      Category.countDocuments = jest.fn().mockRejectedValue(error)
+      createError.mockReturnValue(new Error(NOT_FOUND))
+
+      await expect(categoryService.getCategoryNames()).rejects.toThrow(
+        new Error(NOT_FOUND)
+      )
+      expect(createError).toHaveBeenCalledWith(404, NOT_FOUND)
     })
   })
 })

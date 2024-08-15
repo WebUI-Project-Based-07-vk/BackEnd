@@ -22,8 +22,10 @@ router.param('id', idValidation)
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.get('/:id', asyncWrapper(categoryController.getCategoryById))
 router.get('/:id/subjects/names', isEntityValid({ params }), categoryController.getSubjectsNamesByCategoryId)
+router.get('/names', asyncWrapper(categoryController.getCategoryNames))
 
 router.use(restrictTo(ADMIN))
 router.post('/', asyncWrapper(categoryController.addCategory))
+
 
 module.exports = router

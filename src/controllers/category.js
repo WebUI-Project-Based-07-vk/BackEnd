@@ -27,9 +27,16 @@ const getSubjectsNamesByCategoryId = async (req, res) => {
   res.status(200).json(subjectsNames)
 }
 
+const getCategoryNames = async (req, res) => {
+  const categoryNames = await categoryService.getCategoryNames()
+
+  res.status(200).json(categoryNames)
+}
+
 module.exports = {
   getCategories,
   getCategoryById,
+  getSubjectsNamesByCategoryId,
+  getCategoryNames,
   addCategory,
-  getSubjectsNamesByCategoryId
 }
