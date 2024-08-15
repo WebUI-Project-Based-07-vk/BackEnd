@@ -1,0 +1,52 @@
+[
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439012" },
+    "name": "Languages",
+    "appearance": {
+      "icon": "mocked-path-to-icon",
+      "color": "#66C42C"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439013" },
+    "name": "Mathematics",
+    "appearance": {
+      "icon": "mocked-path-to-icon",
+      "color": "#66C42C"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439014" },
+    "name": "Computer science",
+    "appearance": {
+      "icon": "mocked-path-to-icon",
+      "color": "#66C42C"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439015" },
+    "name": "Music",
+    "appearance": {
+      "icon": "mocked-path-to-icon",
+      "color": "#66C42C"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439016" },
+    "name": "History",
+    "appearance": {
+      "icon": "mocked-path-to-icon",
+      "color": "#66C42C"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  }
+]
