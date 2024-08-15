@@ -3,10 +3,11 @@ const { createError } = require('../utils/errorsHelper')
 const { INTERNAL_SERVER_ERROR, INVALID_ID } = require('~/consts/errors')
 
 const subjectService = {
-  getSubjects: async () => {
+  getSubjects: async (sort, skip = 0, limit = 10) => {
     try {
-      const subjects = await Subject.find().exec()
-      return subjects
+      const subjects = await Subject.find().sort(sort).skip(skip).limit(limit).lean().exec()
+      const count = await Subject.countDocuments()
+      return { count, subjects }
     } catch (error) {
       throw createError(500, INTERNAL_SERVER_ERROR)
     }

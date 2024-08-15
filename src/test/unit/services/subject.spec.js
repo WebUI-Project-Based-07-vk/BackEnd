@@ -14,17 +14,37 @@ describe('subjectService', () => {
   })
 
   describe('getSubjects', () => {
-    it('should return subjects when find is successful', async () => {
-      const mockSubjects = [{ name: 'Math' }, { name: 'Science' }]
+    let mockSubjects
+    beforeEach(() => {
+      mockSubjects = [{ name: 'Math' }, { name: 'Science' }]
+
       Subject.find.mockReturnValue({
+        sort: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
         exec: jest.fn().mockResolvedValue(mockSubjects)
       })
 
-      const subjects = await subjectService.getSubjects()
+      Subject.countDocuments.mockResolvedValue(mockSubjects.length)
+    })
 
-      expect(subjects).toBe(mockSubjects)
+    it('should return subjects and count when find is successful', async () => {
+      const mockSubjects = [{ name: 'Math' }, { name: 'Science' }]
+      const mockCount = 2
+
+      Subject.countDocuments.mockResolvedValue(mockCount)
+
+      const result = await subjectService.getSubjects()
+
+      expect(result).toEqual({ count: mockCount, subjects: mockSubjects })
       expect(Subject.find).toHaveBeenCalledTimes(1)
+      expect(Subject.find().sort).toHaveBeenCalledTimes(1)
+      expect(Subject.find().skip).toHaveBeenCalledTimes(1)
+      expect(Subject.find().limit).toHaveBeenCalledTimes(1)
+      expect(Subject.find().lean).toHaveBeenCalledTimes(1)
       expect(Subject.find().exec).toHaveBeenCalledTimes(1)
+      expect(Subject.countDocuments).toHaveBeenCalledTimes(1)
     })
 
     it('should throw an error when find fails', async () => {
@@ -40,16 +60,31 @@ describe('subjectService', () => {
       expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
     })
 
-    it('should return an empty array when no subjects are found', async () => {
+    it('should return an empty array and count as 0 when no subjects are found', async () => {
+      const mockSubjects = []
+
       Subject.find.mockReturnValue({
-        exec: jest.fn().mockResolvedValue([])
+        sort: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockSubjects)
       })
 
-      const subjects = await subjectService.getSubjects()
+      const mockCount = 0
 
-      expect(subjects).toEqual([])
+      Subject.countDocuments.mockResolvedValue(mockCount)
+
+      const result = await subjectService.getSubjects()
+
+      expect(result).toEqual({ count: mockCount, subjects: mockSubjects })
       expect(Subject.find).toHaveBeenCalledTimes(1)
+      expect(Subject.find().sort).toHaveBeenCalledTimes(1)
+      expect(Subject.find().skip).toHaveBeenCalledTimes(1)
+      expect(Subject.find().limit).toHaveBeenCalledTimes(1)
+      expect(Subject.find().lean).toHaveBeenCalledTimes(1)
       expect(Subject.find().exec).toHaveBeenCalledTimes(1)
+      expect(Subject.countDocuments).toHaveBeenCalledTimes(1)
     })
   })
 
