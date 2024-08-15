@@ -14,3 +14,16 @@ paths:
           description: "Category already exists in the database"
         '500':
           description: "Something went wrong while adding the category (likely validation error)"
+  /categories/{id}:
+    post:
+      summary: "Get category by ID"
+      description: "Find category in the database by its ID"
+      responses:
+        '200':
+          description: "OK: a category is found and returned"
+        '401':
+          description: "Unauthorized (need to be authorized with any role)"
+        '404':
+          description: "Category is not found by the specified ID"
+        '500':
+          description: "Something went wrong while looking up the category by ID (probably shouldn't happen normally)"

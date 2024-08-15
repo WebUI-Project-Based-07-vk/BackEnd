@@ -20,6 +20,7 @@ router.use(authMiddleware)
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(categoryController.getCategories))
+router.get('/:id', asyncWrapper(categoryController.getCategoryById))
 router.get('/:id/subjects/names', isEntityValid({ params }), categoryController.getSubjectsNamesByCategoryId)
 
 router.use(restrictTo(ADMIN))
