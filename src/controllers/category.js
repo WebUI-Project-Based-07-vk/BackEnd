@@ -4,8 +4,6 @@ const getSortOptions = require('~/utils/getSortOptions')
 const getCategories = async (req, res) => {
   const { sort, skip, limit } = req.query
 
-  console.log(sort, skip, limit)
-
   const sortOptions = getSortOptions(sort)
   const categories = await categoryService.getCategories(sortOptions, parseInt(skip), parseInt(limit))
 
@@ -40,5 +38,5 @@ module.exports = {
   getCategoryById,
   getSubjectsNamesByCategoryId,
   getCategoryNames,
-  addCategory,
+  addCategory
 }

@@ -1,7 +1,11 @@
+const qs = require('qs')
+
 const getSortOptions = (sort) => {
-  console.log(sort)
   try {
-    const { order, orderBy } = JSON.parse(sort)
+    let decodedSort = sort
+    if (typeof sort === 'string') decodedSort = qs.parse(sort)
+
+    const { order, orderBy } = JSON.parse(decodedSort)
     return { [orderBy || 'updatedAt']: order || 'asc' }
   } catch (error) {
     return { updatedAt: 'asc' }

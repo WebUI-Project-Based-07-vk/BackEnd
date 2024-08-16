@@ -1,4 +1,3 @@
-// const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const { createError } = require('~/utils/errorsHelper')
