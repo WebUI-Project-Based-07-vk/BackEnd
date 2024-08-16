@@ -1,0 +1,44 @@
+[
+  {
+    "_id": {
+      "$oid": "66bf18e436852647642f92e3"
+    },
+    "role": [
+      "tutor"
+    ],
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "s2satlasvk@gmail.com",
+    "password": "$2b$10$9BxtQn3V09UrkxdudhfReuyc3RMdtDdff5cnAj4xb5BywOiPZVIUC",
+    "mainSubjects": {
+      "student": [],
+      "tutor": []
+    },
+    "totalReviews": {
+      "student": 0,
+      "tutor": 0
+    },
+    "averageRating": {
+      "student": 0,
+      "tutor": 0
+    },
+    "nativeLanguage": null,
+    "isEmailConfirmed": true,
+    "isFirstLogin": true,
+    "lastLogin": null,
+    "appLanguage": "en",
+    "status": {
+      "student": "active",
+      "tutor": "active",
+      "admin": "active"
+    },
+    "lastLoginAs": "tutor",
+    "bookmarkedOffers": [],
+    "createdAt": {
+      "$date": "2024-08-16T09:16:20.848Z"
+    },
+    "updatedAt": {
+      "$date": "2024-08-16T09:16:20.848Z"
+    }
+  }
+]

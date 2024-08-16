@@ -1,0 +1,134 @@
+[
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439012" },
+    "name": "Languages",
+    "appearance": {
+      "icon": "LanguageIcon",
+      "backgroundColor": "#79B26033",
+      "iconColor": "#79B260"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439013" },
+    "name": "Mathematics",
+    "appearance": {
+      "icon": "NumbersIcon",
+      "backgroundColor": "#fff3e0",
+      "iconColor": "#ffcc80"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439014" },
+    "name": "Computer Science",
+    "appearance": {
+      "icon": "TvIcon",
+      "backgroundColor": "#e0e0e0",
+      "iconColor": "#757575"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439015" },
+    "name": "Music",
+    "appearance": {
+      "icon": "MusicNoteIcon",
+      "backgroundColor": "#fce4ec",
+      "iconColor": "#f06292"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439016" },
+    "name": "Design",
+    "appearance": {
+      "icon": "DesignServicesIcon",
+      "backgroundColor": "#e0f7fa",
+      "iconColor": "#4dd0e1"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439017" },
+    "name": "History",
+    "appearance": {
+      "icon": "LanguageIcon",
+      "backgroundColor": "#ffebee",
+      "iconColor": "#ef5350"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439018" },
+    "name": "Biology",
+    "appearance": {
+      "icon": "BiotechIcon",
+      "backgroundColor": "#e0e0e0",
+      "iconColor": "#757575"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd799439019" },
+    "name": "Painting",
+    "appearance": {
+      "icon": "PaletteIcon",
+      "backgroundColor": "#dcedc8",
+      "iconColor": "#aed581"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd79943901a" },
+    "name": "Finances",
+    "appearance": {
+      "icon": "AccountBalanceIcon",
+      "backgroundColor": "#fff3e0",
+      "iconColor": "#ffcc80"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd79943901b" },
+    "name": "Audit",
+    "appearance": {
+      "icon": "LegendToggleIcon",
+      "backgroundColor": "#ffebee",
+      "iconColor": "#ef5350"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd79943901c" },
+    "name": "Chemistry",
+    "appearance": {
+      "icon": "ScienceIcon",
+      "backgroundColor": "#fce4ec",
+      "iconColor": "#f06292"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  },
+  {
+    "_id": { "$oid": "64dfe0b9bcf86cd79943901d" },
+    "name": "Astronomy",
+    "appearance": {
+      "icon": "StarIcon",
+      "backgroundColor": "#e0f7fa",
+      "iconColor": "#4dd0e1"
+    },
+    "createdAt": "2024-08-15T08:45:21.236Z",
+    "updatedAt": "2024-08-15T08:45:21.236Z"
+  }
+]

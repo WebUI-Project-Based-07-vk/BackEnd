@@ -1,3 +1,4 @@
+// const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const { createError } = require('~/utils/errorsHelper')
@@ -7,7 +8,15 @@ const categoryService = {
   getCategories: async (sort, skip = 0, limit = 10) => {
     try {
       const categories = await Category.find().sort(sort).skip(skip).limit(limit).lean().exec()
+
+      // const categoriesWithTotalOffers = await Promise.all(
+      //   categories.map(async (category) => {
+      //     const totalOffers = await Offer.countDocuments({ category: category._id })
+      //     return { ...category.toObject(), totalOffers }
+      //   })
+      // )
       const count = await Category.countDocuments()
+
       return { count, categories }
     } catch (error) {
       throw createError(500, INTERNAL_SERVER_ERROR)

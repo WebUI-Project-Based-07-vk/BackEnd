@@ -13,13 +13,18 @@ const categorySchema = new Schema(
     appearance: {
       icon: {
         type: String,
-        default: 'mocked-path-to-icon',
+        default: 'LanguageIcon',
         required: [true, FIELD_CANNOT_BE_EMPTY('icon')]
       },
-      color: {
+      backgroundColor: {
         type: String,
-        default: '#66C42C',
-        required: [true, FIELD_CANNOT_BE_EMPTY('color')]
+        default: '#79B26033',
+        required: [true, FIELD_CANNOT_BE_EMPTY('backgroundColor')]
+      },
+      iconColor: {
+        type: String,
+        default: '#79B260',
+        required: [true, FIELD_CANNOT_BE_EMPTY('iconColor')]
       }
     }
   },

@@ -1,4 +1,5 @@
 const getSortOptions = (sort) => {
+  console.log(sort)
   try {
     const { order, orderBy } = JSON.parse(sort)
     return { [orderBy || 'updatedAt']: order || 'asc' }

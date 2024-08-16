@@ -1,0 +1,68 @@
+[
+  {
+    "price": 50,
+    "proficiencyLevel": "Intermediate",
+    "title": "Learn Spanish Fast!",
+    "description": "This course is designed for beginners and intermediate learners who want to quickly master the basics of Spanish.",
+    "languages": ["Spanish", "English"],
+    "authorRole": "Tutor",
+    "author": "66bf18e436852647642f92e3",
+    "subject": "64dfe1b2bcf86cd799439017",
+    "category": "64dfe0b9bcf86cd799439012",
+    "status": "Active",
+    "FAQ": [
+      {
+        "question": "What materials are included?",
+        "answer": "All course materials and practice exercises are provided."
+      },
+      {
+        "question": "Do I need prior knowledge?",
+        "answer": "No prior knowledge of Spanish is required."
+      }
+    ]
+  },
+  {
+    "price": 75,
+    "proficiencyLevel": "Advanced",
+    "title": "Mastering Python for Data Science",
+    "description": "An advanced course for professionals who want to enhance their Python skills for data science applications.",
+    "languages": ["English"],
+    "authorRole": "Tutor",
+    "author": "66bf18e436852647642f92e3",
+    "subject": "64dfe1b2bcf86cd799439019",
+    "category": "64dfe0b9bcf86cd799439014",
+    "status": "Active",
+    "FAQ": [
+      {
+        "question": "Is this course suitable for beginners?",
+        "answer": "This course is designed for those with a basic understanding of Python."
+      },
+      {
+        "question": "What will I learn?",
+        "answer": "You'll learn advanced Python techniques and how to apply them in data science projects."
+      }
+    ]
+  },
+  {
+    "price": 30,
+    "proficiencyLevel": "Beginner",
+    "title": "Introduction to Classical Music",
+    "description": "Explore the world of classical music with this beginner-friendly course.",
+    "languages": ["English", "French"],
+    "authorRole": "Tutor",
+    "author": "66bf18e436852647642f92e3",
+    "subject": "64dfe1b2bcf86cd799439017",
+    "category": "64dfe0b9bcf86cd799439012",
+    "status": "Active",
+    "FAQ": [
+      {
+        "question": "Do I need any instruments?",
+        "answer": "No instruments are required; this course is an introduction to classical music."
+      },
+      {
+        "question": "How long is the course?",
+        "answer": "The course is 6 weeks long."
+      }
+    ]
+  }
+]
