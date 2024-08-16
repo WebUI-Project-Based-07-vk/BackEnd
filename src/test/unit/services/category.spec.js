@@ -130,9 +130,7 @@ describe('categoryService', () => {
       Category.countDocuments = jest.fn().mockRejectedValue(error)
       createError.mockReturnValue(new Error(NOT_FOUND))
 
-      await expect(categoryService.getCategoryNames()).rejects.toThrow(
-        new Error(NOT_FOUND)
-      )
+      await expect(categoryService.getCategoryNames()).rejects.toThrow(new Error(NOT_FOUND))
       expect(createError).toHaveBeenCalledWith(404, NOT_FOUND)
     })
   })

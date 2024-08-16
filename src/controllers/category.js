@@ -38,5 +38,5 @@ module.exports = {
   getCategoryById,
   getSubjectsNamesByCategoryId,
   getCategoryNames,
-  addCategory,
+  addCategory
 }
