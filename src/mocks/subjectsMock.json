@@ -1,0 +1,51 @@
+[
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd799439017" },
+    "name": "Spanish",
+    "category": { "$oid": "64dfe0b9bcf86cd799439012" },
+    "createdAt": "2024-08-15T09:00:00.000Z",
+    "updatedAt": "2024-08-15T09:00:00.000Z"
+  },
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd799439018" },
+    "name": "Calculus",
+    "category": { "$oid": "64dfe0b9bcf86cd799439013" },
+    "createdAt": "2024-08-15T09:01:00.000Z",
+    "updatedAt": "2024-08-15T09:01:00.000Z"
+  },
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd799439019" },
+    "name": "Algorithms",
+    "category": { "$oid": "64dfe0b9bcf86cd799439014" },
+    "createdAt": "2024-08-15T09:02:00.000Z",
+    "updatedAt": "2024-08-15T09:02:00.000Z"
+  },
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd79943901a" },
+    "name": "Piano",
+    "category": { "$oid": "64dfe0b9bcf86cd799439015" },
+    "createdAt": "2024-08-15T09:03:00.000Z",
+    "updatedAt": "2024-08-15T09:03:00.000Z"
+  },
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd79943901b" },
+    "name": "World War II",
+    "category": { "$oid": "64dfe0b9bcf86cd799439016" },
+    "createdAt": "2024-08-15T09:04:00.000Z",
+    "updatedAt": "2024-08-15T09:04:00.000Z"
+  },
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd79943901c" },
+    "name": "Ancient Civilizations",
+    "category": { "$oid": "64dfe0b9bcf86cd799439016" },
+    "createdAt": "2024-08-15T09:05:00.000Z",
+    "updatedAt": "2024-08-15T09:05:00.000Z"
+  },
+  {
+    "_id": { "$oid": "64dfe1b2bcf86cd79943901d" },
+    "name": "Renaissance Art",
+    "category": { "$oid": "64dfe0b9bcf86cd799439016" },
+    "createdAt": "2024-08-15T09:06:00.000Z",
+    "updatedAt": "2024-08-15T09:06:00.000Z"
+  }
+]

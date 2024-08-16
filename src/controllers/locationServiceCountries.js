@@ -4,8 +4,12 @@ const {
 const locationServiceCountries = require('~/services/locationServiceCountries')
 
 const getCountryList = async (req, res) => {
-  const country_list = await locationServiceCountries.getCountries(API_KEY)
-  res.status(200).json(country_list)
+  try {
+    const country_list = await locationServiceCountries.getCountries(API_KEY)
+    res.status(200).json(country_list)
+  } catch (error) {
+    res.status(error.statusCode || 401).json({ error: error.message || 'Failed to fetch countries' })
+  }
 }
 
 module.exports = {

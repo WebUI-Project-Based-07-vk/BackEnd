@@ -132,4 +132,64 @@ describe('subjectService', () => {
       expect(Subject.findByIdAndRemove).toHaveBeenCalledWith(subjectId)
     })
   })
+
+  describe('updateSubject', () => {
+    it('should update the subject and return the populated subject when valid data is provided', async () => {
+      const mockSubject = {
+        _id: '123',
+        name: 'Physics',
+        category: 'category_id',
+        save: jest.fn().mockResolvedValue({
+          _id: '123',
+          name: 'Updated Physics',
+          category: 'category_id'
+        }),
+        populate: jest.fn().mockResolvedValue({
+          _id: '123',
+          name: 'Updated Physics',
+          category: { _id: 'category_id', name: 'Science' }
+        })
+      }
+
+      Subject.findById.mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mockSubject)
+      })
+
+      const subjectId = '123'
+      const updateData = { name: 'Updated Physics' }
+
+      const result = await subjectService.updateSubject(subjectId, updateData)
+
+      expect(Subject.findById).toHaveBeenCalledWith(subjectId)
+      expect(Subject.findById).toHaveBeenCalledTimes(1)
+
+      expect(mockSubject.name).toBe(updateData.name)
+      expect(mockSubject.save).toHaveBeenCalledTimes(1)
+
+      expect(mockSubject.populate).toHaveBeenCalledWith({
+        path: 'category',
+        select: '_id name'
+      })
+
+      expect(result).toEqual({
+        _id: '123',
+        name: 'Updated Physics',
+        category: { _id: 'category_id', name: 'Science' }
+      })
+    })
+
+    it('should throw an error when update fails', async () => {
+      const error = new Error('Database error')
+      const subjectId = '123'
+      Subject.findById.mockReturnValue({
+        exec: jest.fn().mockRejectedValue(error)
+      })
+
+      const mockError = createError(500, INTERNAL_SERVER_ERROR)
+      createError.mockReturnValue(mockError)
+
+      await expect(subjectService.updateSubject(subjectId, { name: 'Updated Physics' })).rejects.toEqual(mockError)
+      expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
+    })
+  })
 })

@@ -3,6 +3,14 @@ const {
 } = require('~/consts/validation')
 
 const errors = {
+  CATEGORY_ALREADY_EXISTS: {
+    code: 'CATEGORY_ALREADY_EXISTS',
+    message: 'Category cannot be added, as it already exists in the database.'
+  },
+  CATEGORY_NOT_FOUND: {
+    code: 'CATEGORY_NOT_FOUND',
+    message: 'Category with the specified ID was not found.'
+  },
   COUNTRYSTATECITY_API_ISSUE: {
     code: 'COUNTRYSTATECITY_API_ISSUE',
     message: 'Some issue occurred while polling CountryStateCity.in API.'
