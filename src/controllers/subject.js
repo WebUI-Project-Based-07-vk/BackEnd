@@ -1,7 +1,17 @@
 const subjectService = require('~/services/subject')
+const getSortOptions = require('~/utils/getSortOptions')
+const getMatchOptions = require('~/utils/getMatchOptions')
 
 const getSubjects = async (req, res) => {
-  const subjects = await subjectService.getSubjects()
+  const { sort, skip, limit, name, category } = req.query
+
+  const sortOptions = getSortOptions(sort)
+  const match = getMatchOptions({
+    name,
+    category
+  })
+
+  const subjects = await subjectService.getSubjects(match, sortOptions, parseInt(skip), parseInt(limit))
 
   res.status(200).json(subjects)
 }

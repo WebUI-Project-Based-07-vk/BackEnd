@@ -1,12 +1,27 @@
+const mongoose = require('mongoose')
 const Subject = require('~/models/subject')
 const { createError } = require('../utils/errorsHelper')
 const { INTERNAL_SERVER_ERROR, INVALID_ID } = require('~/consts/errors')
 
 const subjectService = {
-  getSubjects: async () => {
+  getSubjects: async (match, sort, skip = 0, limit = 10) => {
     try {
-      const subjects = await Subject.find().exec()
-      return subjects
+      if (match.category) {
+        match.category = mongoose.Types.ObjectId(match.category)
+      }
+      if (match.name) {
+        match.name = { $regex: match.name, $options: 'i' }
+      }
+
+      const total = await Subject.countDocuments(match)
+      if (skip >= total) {
+        return { count: 0, total, subjects: [] }
+      }
+
+      const subjects = await Subject.find(match).sort(sort).skip(skip).limit(limit).lean().exec()
+      const count = subjects.length
+
+      return { count, total, subjects }
     } catch (error) {
       throw createError(500, INTERNAL_SERVER_ERROR)
     }

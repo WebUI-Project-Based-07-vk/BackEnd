@@ -14,42 +14,156 @@ describe('subjectService', () => {
   })
 
   describe('getSubjects', () => {
-    it('should return subjects when find is successful', async () => {
-      const mockSubjects = [{ name: 'Math' }, { name: 'Science' }]
+    let mockSubjects
+
+    beforeEach(() => {
+      mockSubjects = [{ name: 'Math' }, { name: 'Science' }]
+
+      Subject.find.mockClear()
+      Subject.countDocuments.mockClear()
+
       Subject.find.mockReturnValue({
+        sort: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
         exec: jest.fn().mockResolvedValue(mockSubjects)
       })
 
-      const subjects = await subjectService.getSubjects()
-
-      expect(subjects).toBe(mockSubjects)
-      expect(Subject.find).toHaveBeenCalledTimes(1)
-      expect(Subject.find().exec).toHaveBeenCalledTimes(1)
+      Subject.countDocuments.mockResolvedValue(mockSubjects.length)
     })
 
-    it('should throw an error when find fails', async () => {
-      const error = new Error('Database error')
+    it('should return subjects and count when find is successful', async () => {
+      const match = {}
+      const sort = {}
+      const skip = 0
+      const limit = 10
+
+      const result = await subjectService.getSubjects(match, sort, skip, limit)
+
+      expect(result).toEqual({ count: mockSubjects.length, total: mockSubjects.length, subjects: mockSubjects })
+      expect(Subject.find).toHaveBeenCalledTimes(1)
+      expect(Subject.find).toHaveBeenCalledWith(match)
+      expect(Subject.find().sort).toHaveBeenCalledWith(sort)
+      expect(Subject.find().skip).toHaveBeenCalledWith(skip)
+      expect(Subject.find().limit).toHaveBeenCalledWith(limit)
+      expect(Subject.find().lean).toHaveBeenCalledTimes(1)
+      expect(Subject.find().exec).toHaveBeenCalledTimes(1)
+      expect(Subject.countDocuments).toHaveBeenCalledTimes(1)
+      expect(Subject.countDocuments).toHaveBeenCalledWith(match)
+    })
+
+    it('should not call Subject.find when skip is greater than or equal to count', async () => {
+      const mockCount = 5
+      const mockSubjects = []
+      const match = {}
+      const sort = {}
+      const skip = 10
+      const limit = 10
+
+      Subject.countDocuments.mockResolvedValue(mockCount)
       Subject.find.mockReturnValue({
-        exec: jest.fn().mockRejectedValue(error)
+        sort: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockSubjects)
       })
+
+      const result = await subjectService.getSubjects(match, sort, skip, limit)
+
+      expect(result).toEqual({ count: 0, total: mockCount, subjects: [] })
+
+      expect(Subject.find).not.toHaveBeenCalled()
+
+      expect(Subject.countDocuments).toHaveBeenCalledTimes(1)
+      expect(Subject.countDocuments).toHaveBeenCalledWith(match)
+    })
+
+    it('should handle the case when skip is greater than the total count', async () => {
+      const mockCount = 5
+      const mockSubjects = []
+      const match = {}
+      const sort = {}
+      const skip = 10
+      const limit = 10
+
+      Subject.countDocuments.mockResolvedValue(mockCount)
+      Subject.find.mockReturnValue({
+        sort: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockSubjects)
+      })
+
+      const result = await subjectService.getSubjects(match, sort, skip, limit)
+
+      expect(result).toEqual({ count: 0, total: mockCount, subjects: [] })
+      expect(Subject.countDocuments).toHaveBeenCalledTimes(1)
+      expect(Subject.countDocuments).toHaveBeenCalledWith(match)
+      expect(Subject.find).not.toHaveBeenCalled()
+    })
+
+    it('should handle case where match.category is a valid ObjectId', async () => {
+      const match = { category: '507f191e810c19729de860ea' }
+      const sort = {}
+      const skip = 0
+      const limit = 10
+
+      const mockSubjects = [{ name: 'Math' }]
+      Subject.countDocuments.mockResolvedValue(1)
+      Subject.find.mockReturnValue({
+        sort: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockSubjects)
+      })
+
+      const result = await subjectService.getSubjects(match, sort, skip, limit)
+
+      expect(result).toEqual({ count: mockSubjects.length, total: 1, subjects: mockSubjects })
+      expect(Subject.countDocuments).toHaveBeenCalledWith(match)
+    })
+
+    it('should handle case where match.name is a regex query', async () => {
+      const match = { name: 'Math' }
+      const sort = {}
+      const skip = 0
+      const limit = 10
+
+      const mockSubjects = [{ name: 'Math' }]
+      Subject.countDocuments.mockResolvedValue(1)
+      Subject.find.mockReturnValue({
+        sort: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockSubjects)
+      })
+
+      const result = await subjectService.getSubjects(match, sort, skip, limit)
+
+      expect(result).toEqual({ count: mockSubjects.length, total: 1, subjects: mockSubjects })
+      expect(Subject.countDocuments).toHaveBeenCalledWith(match)
+    })
+
+    it('should handle error and throw a 500 error', async () => {
+      const match = {}
+      const sort = {}
+      const skip = 0
+      const limit = 10
+
+      const error = new Error('Database error')
+      Subject.countDocuments.mockRejectedValueOnce(error)
 
       const mockError = createError(500, INTERNAL_SERVER_ERROR)
       createError.mockReturnValue(mockError)
 
-      await expect(subjectService.getSubjects()).rejects.toEqual(mockError)
+      await expect(subjectService.getSubjects(match, sort, skip, limit)).rejects.toEqual(mockError)
+
       expect(createError).toHaveBeenCalledWith(500, INTERNAL_SERVER_ERROR)
-    })
-
-    it('should return an empty array when no subjects are found', async () => {
-      Subject.find.mockReturnValue({
-        exec: jest.fn().mockResolvedValue([])
-      })
-
-      const subjects = await subjectService.getSubjects()
-
-      expect(subjects).toEqual([])
-      expect(Subject.find).toHaveBeenCalledTimes(1)
-      expect(Subject.find().exec).toHaveBeenCalledTimes(1)
     })
   })
 
